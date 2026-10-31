@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="kingmath-api" content="">
+<meta name="theme-color" content="#f5f6fb">
+<meta name="referrer" content="no-referrer">
+<title>KingMath-AI - Learn with clarity</title>
+<script nonce="__NONCE__">try{var t=localStorage.getItem('km_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+<style nonce="__NONCE__">
+:root{--bg:#f5f6fb;--surface:#fff;--surface2:#f0f2f9;--text:#141a2e;--muted:#667089;--line:#e3e7f1;--primary:#4f46e5;--on-primary:#fff;--primary-soft:#eceafe;--good:#12805c;--good-soft:#e3f6ee;--bad:#c2343f;--bad-soft:#fdeaec;--warn:#a96a0b;--warn-soft:#fff3dc;--shadow:0 1px 2px rgba(20,26,46,.04),0 10px 30px rgba(20,26,46,.06);color-scheme:light;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+[data-theme=dark]{--bg:#0d111c;--surface:#151b2b;--surface2:#1c2336;--text:#e9edf7;--muted:#9aa5bd;--line:#273049;--primary:#8b85ff;--on-primary:#0d111c;--primary-soft:#232a4a;--good:#4fd3a0;--good-soft:#12302a;--bad:#ff8a93;--bad-soft:#3a1d24;--warn:#f2c06b;--warn-soft:#38301a;--shadow:0 10px 30px rgba(0,0,0,.35);color-scheme:dark}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--bg);color:var(--text);font-size:15px;line-height:1.55}
+button,input,textarea,select{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--primary) 50%,transparent);outline-offset:2px}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:22px 14px;border-right:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;gap:4px}
+.brand{display:flex;gap:11px;align-items:center;font-weight:800;font-size:18px;letter-spacing:-.3px;padding:2px 8px 20px}
+.brand small{display:block;font-size:9.5px;letter-spacing:1.4px;color:var(--muted);font-weight:700;margin-top:-2px}
+.mark{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#4f46e5,#8b5cf6);color:#fff;display:grid;place-items:center;font-weight:800;flex-shrink:0}
+.nav-item{display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--muted);padding:11px 12px;border-radius:12px;font-weight:650;width:100%;text-align:left}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item[aria-current=page]{background:var(--primary-soft);color:var(--primary)}
+.side .spacer{flex:1}
+.mtop{display:none}
+.page{max-width:1080px;margin:0 auto;padding:30px 24px 60px}
+.pagehead{margin-bottom:22px}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--primary);text-transform:uppercase;margin:0 0 6px}
+h1{font-size:clamp(26px,4vw,36px);letter-spacing:-1px;line-height:1.15;margin:0 0 10px}h2{margin:0;font-size:17px}h3{margin:0 0 8px}
+.lead{color:var(--muted);margin:0;max-width:640px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.pad{padding:20px}.chead{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.chead p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+.label{display:block;font-size:12px;font-weight:750;margin-bottom:7px}.hint{font-size:12px;color:var(--muted)}.muted{color:var(--muted)}
+textarea,select,.field{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 13px}
+textarea:focus,select:focus,.field:focus{border-color:var(--primary);outline:none}
+textarea{min-height:140px;resize:vertical;line-height:1.6}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrap{flex-wrap:wrap}.mt{margin-top:14px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:10px 15px;border-radius:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .12s,border-color .12s}
+.btn:hover{border-color:var(--primary)}.btn:active{transform:scale(.98)}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.btn.soft{background:var(--primary-soft);border-color:transparent;color:var(--primary)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.sm{padding:7px 11px;font-size:13px}.btn:disabled{opacity:.5;cursor:not-allowed}
+.link{border:0;background:none;color:var(--primary);font-weight:700;padding:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:7px 12px;font-size:13px}
+.chip:hover,.chip.on{border-color:var(--primary);color:var(--primary);background:var(--primary-soft)}
+.attach{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;padding:12px;border:1.5px dashed var(--line);border-radius:14px;align-items:center}
+.attach.drag{border-color:var(--primary);background:var(--primary-soft)}
+.attach .hint{flex:1;min-width:140px}
+.preview{display:flex;gap:12px;align-items:center;margin-top:10px;padding:8px;border:1px solid var(--line);border-radius:12px}
+.preview img{width:72px;height:72px;object-fit:cover;border-radius:9px}
+.preview div{flex:1;min-width:0;font-size:13px}
+.notice{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:11px 14px;margin:12px 0;font-size:13px}
+.notice.error{color:var(--bad);background:var(--bad-soft);border-color:transparent}
+.notice.ok{color:var(--good);background:var(--good-soft);border-color:transparent}
+.loading{display:flex;gap:10px;align-items:center;padding:20px;color:var(--muted)}
+.spin{width:18px;height:18px;border:2px solid var(--line);border-top-color:var(--primary);border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+.empty{min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;color:var(--muted)}
+.empty .big{width:56px;height:56px;border-radius:18px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;margin-bottom:14px;font-size:26px;font-weight:700}
+.empty h3{color:var(--text);margin-bottom:4px}
+.sol{padding:20px}.sol h3{font-size:20px;line-height:1.3}.sec{margin:18px 0}.sechead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.lbl2{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.callout{background:var(--primary-soft);border-left:3px solid var(--primary);padding:11px 14px;border-radius:10px}
+.step{border:1px solid var(--line);border-radius:13px;margin:8px 0;background:var(--surface)}
+.step summary{list-style:none;cursor:pointer;padding:12px 13px;font-weight:700;display:flex;gap:11px;align-items:center}.step summary::-webkit-details-marker{display:none}
+.step .num{width:26px;height:26px;border-radius:8px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-size:13px;flex-shrink:0}
+.stepbody{padding:0 14px 14px}.work{background:var(--surface2);border-radius:10px;padding:11px 12px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.7;margin:0 0 9px}
+.final{background:var(--good-soft);border-radius:14px;padding:14px}.final .lbl2{color:var(--good)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:10px 0 22px}
+.tcard{padding:15px;border:1px solid var(--line);background:var(--surface);border-radius:14px;text-align:left}
+.tcard:hover{border-color:var(--primary);transform:translateY(-2px)}.tcard b{display:block}.tcard span.d{font-size:12px;color:var(--muted)}
+.sym{width:36px;height:36px;border-radius:10px;background:var(--primary-soft);color:var(--primary);display:grid;place-items:center;font-weight:800;margin-bottom:10px}
+.ctrl{display:grid;grid-template-columns:1fr 170px auto;gap:10px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}.choice{border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:9px 14px;font-weight:700}.choice.on{border-color:var(--primary);background:var(--primary-soft);color:var(--primary)}
+.setup{max-width:760px;margin:0 auto}.setup .block{padding:20px;border-bottom:1px solid var(--line)}.setup .block:last-child{border:0}
+.sum{background:var(--surface2);border-radius:12px;padding:12px 14px;font-size:13px}
+.examtop{position:sticky;top:0;z-index:15;background:var(--bg);padding:10px 0 12px;margin:-10px 0 12px}
+.examtop .inner{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.examtitle{min-width:0}.examtitle b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.timer{font-variant-numeric:tabular-nums;font-weight:850;font-size:19px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 13px;display:flex;gap:7px;align-items:center}
+.timer.urgent{color:var(--bad);border-color:var(--bad)}
+.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--primary);border-radius:9px;transition:width .3s}
+.bar.good i{background:var(--good)}.bar.bad i{background:var(--bad)}.bar.mid i{background:var(--warn)}
+.exgrid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;align-items:start}
+.qmeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;color:var(--muted)}
+.qtext{font-size:19px;line-height:1.5;margin:18px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.opt{width:100%;display:flex;gap:12px;align-items:flex-start;text-align:left;padding:13px;margin:8px 0;border:1.5px solid var(--line);border-radius:14px;background:var(--surface)}
+.opt .l{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);display:grid;place-items:center;font-weight:800;flex-shrink:0}
+.opt.sel{border-color:var(--primary);background:var(--primary-soft)}.opt.sel .l{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.opt span.t{overflow-wrap:anywhere;padding-top:3px}
+.flag{display:flex;gap:8px;align-items:center;font-size:14px;margin-top:12px}.flag input{width:18px;height:18px}
+.numgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:12px 0}
+.qn{aspect-ratio:1;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--muted);font-weight:750}
+.qn.ans{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}.qn.flg{box-shadow:inset 0 -3px 0 var(--warn)}.qn.cur{outline:2px solid var(--text);outline-offset:1px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
+.examfoot{display:flex;gap:10px;margin-top:16px}.examfoot .btn{flex:1}
+.only-m{display:none}.mt2{margin-top:10px}.mt3{margin-top:26px}.block{width:100%}.mb{margin-bottom:6px}.center-p{max-width:520px;margin:10px auto 0}.bigq{font-size:17px}.tips{margin:0;padding-left:18px}.qq{margin:10px 0;font-weight:650}
+.hero-r{text-align:center;padding:28px 20px 8px}
+.ring{--p:0;width:150px;height:150px;border-radius:50%;margin:14px auto;display:grid;place-items:center;background:conic-gradient(var(--rc,var(--primary)) calc(var(--p)*1%),var(--line) 0)}
+.ring>div{width:118px;height:118px;border-radius:50%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring strong{font-size:30px;line-height:1}.ring.good{--rc:var(--good)}.ring.mid{--rc:var(--warn)}.ring.bad{--rc:var(--bad)}
+.band{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:800;font-size:13px;background:var(--primary-soft);color:var(--primary)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}.stat strong{font-size:24px;display:block;line-height:1.1}.stat span{font-size:12px;color:var(--muted)}
+.stat.g strong{color:var(--good)}.stat.b strong{color:var(--bad)}.stat.w strong{color:var(--warn)}
+.tp{margin:10px 0}.tp .row{margin-bottom:5px;font-size:14px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin:14px 0}.tabs .chip{white-space:nowrap}
+.ritem{border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;background:var(--surface)}
+.ritem.correct{border-left:4px solid var(--good)}.ritem.incorrect{border-left:4px solid var(--bad)}.ritem.unanswered{border-left:4px solid var(--warn)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:800;padding:3px 10px;border-radius:99px}
+.badge.correct{background:var(--good-soft);color:var(--good)}.badge.incorrect{background:var(--bad-soft);color:var(--bad)}.badge.unanswered,.badge.flagged{background:var(--warn-soft);color:var(--warn)}
+.ropt{padding:9px 11px;border-radius:10px;margin:5px 0;background:var(--surface2);font-size:14px;overflow-wrap:anywhere}
+.ropt.good{background:var(--good-soft);color:var(--good);font-weight:650}.ropt.bad{background:var(--bad-soft);color:var(--bad);font-weight:650}
+.expl{background:var(--surface2);border-radius:12px;padding:11px 13px;margin-top:10px;font-size:14px}
+.about{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.about .card{padding:20px}.about p{color:var(--muted);font-size:14px;margin:0}
+.tabbar{display:none}
+dialog{border:1px solid var(--line);border-radius:20px;background:var(--surface);color:var(--text);padding:20px;width:min(480px,calc(100% - 24px));box-shadow:var(--shadow)}
+dialog::backdrop{background:rgba(7,12,28,.6)}
+.cam video,.cam img{width:100%;max-height:60vh;border-radius:14px;background:#000;object-fit:contain;display:block}
+.dactions{display:flex;gap:9px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+#toast{position:fixed;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:860px){
+.shell{display:block}.side{display:none}
+.mtop{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--surface);border-bottom:1px solid var(--line)}
+.mtop .brand{padding:0;font-size:17px}.mtop .brand small{display:none}
+.page{padding:18px 14px calc(100px + env(safe-area-inset-bottom))}
+.grid2,.exgrid{grid-template-columns:1fr}.aside-nav{display:none}.only-m{display:flex}
+.tgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.about{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.ctrl{grid-template-columns:1fr}
+.tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));z-index:20}
+.tab{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:6px 2px;border-radius:12px}
+.tab[aria-current=page]{color:var(--primary);background:var(--primary-soft)}
+body.in-exam .tabbar{display:none}body.in-exam .page{padding-bottom:30px}
+.examfoot{position:sticky;bottom:0;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom));margin-bottom:-16px}
+.qtext{font-size:18px}#toast{bottom:100px}
+}
+
+.badge{display:inline-flex;padding:6px 10px;border-radius:999px;background:var(--primary-soft);color:var(--primary);font-size:11px;font-weight:800;letter-spacing:.06em}
+.dialog::backdrop,dialog::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
+dialog.cam{border:1px solid var(--line);border-radius:20px;padding:22px;background:var(--surface);color:var(--text);box-shadow:0 24px 80px #0004}
+dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
+#adminPayments table{width:100%;border-collapse:collapse;font-size:13px}#adminPayments td,#adminPayments th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+#adminPayments button{margin:2px}.divider{height:1px;background:var(--line)}
+@media(max-width:600px){dialog.cam{padding:16px}.grid2{grid-template-columns:1fr}#adminPayments{overflow:auto}}
+
+</style>
+</head>
+<body>
+<svg class="sprite" aria-hidden="true"><defs>
+<symbol id="i-solve" viewBox="0 0 24 24"><path d="M18 5H6l6 7-6 7h12"/></symbol>
+<symbol id="i-explore" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36z"/></symbol>
+<symbol id="i-cbt" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></symbol>
+<symbol id="i-about" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol>
+<symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-flip" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
+</defs></svg>
+
+<div class="shell">
+<aside class="side" aria-label="Main navigation">
+  <div class="brand"><div class="mark">K</div><div>KingMath-AI<small>LEARN WITH CLARITY</small></div></div>
+  <button class="nav-item" data-go="solve"><svg class="ic"><use href="#i-solve"/></svg>Solve</button>
+  <button class="nav-item" data-go="explore"><svg class="ic"><use href="#i-explore"/></svg>Practice topics</button>
+  <button class="nav-item" data-go="cbt"><svg class="ic"><use href="#i-cbt"/></svg>CBT exam</button>
+  <button class="nav-item" data-go="about"><svg class="ic"><use href="#i-about"/></svg>About</button>
+  <button class="nav-item" data-act="account-open">♙ Account &amp; Pro</button>
+  <button class="nav-item" data-act="admin-open" id="adminNav" hidden>▦ Private admin</button>
+  <div class="spacer"></div>
+  <button class="nav-item" data-act="theme" aria-label="Toggle theme"></button>
+</aside>
+
+<div class="main">
+<header class="mtop"><div class="brand"><div class="mark">K</div>KingMath-AI</div><div class="row" style="gap:8px"><button class="btn sm" data-act="account-open">Account</button><button class="btn sm" data-act="theme" aria-label="Toggle theme"></button></div></header>
+<main class="page">
+
+<!-- SOLVE -->
+<section class="view" data-view="solve" id="view-solve">
+  <div class="pagehead"><p class="eyebrow">AI tutor</p><h1>Understand the why, not just the answer.</h1><p class="lead">Type a question or snap a photo of it. Get clear steps you can follow.</p></div>
+  <div class="grid2">
+    <div class="card pad">
+      <label class="label" for="question">Your question</label>
+      <textarea id="question" maxlength="6000" placeholder="Type a question, equation or concept..."></textarea>
+      <div class="row between"><span class="hint">Ctrl/Cmd + Enter to solve</span><span class="hint" id="charCount">0 / 6000</span></div>
+      <div class="attach" id="dropzone">
+        <button class="btn soft" data-act="open-cam"><svg class="ic"><use href="#i-camera"/></svg>Camera</button>
+        <button class="btn" data-act="pick-file"><svg class="ic"><use href="#i-image"/></svg>Upload photo</button>
+        <span class="hint">Or drop / paste an image. Photos are shrunk on your device before sending.</span>
+        <input id="fileInput" type="file" accept="image/png,image/jpeg,image/webp,image/*" hidden>
+        <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+      </div>
+      <div id="imagePreview"></div>
+      <label class="label mt" for="level">Learning level</label>
+      <select id="level"><option>Secondary school</option><option>Junior secondary</option><option>Senior secondary / WAEC</option><option>UTME candidate </option><option>Independent learner</option></select>
+      <div class="row between mt"><button class="btn ghost" data-act="clear">Clear</button><button class="btn primary" id="solveBtn" data-act="solve">Solve question</button></div>
+      <div id="solveError"></div>
+      <div class="mt"><div class="label">Try a sample</div><div class="chips">
+        <button class="chip" data-act="sample" data-q="Solve 3x + 7 = 22 and verify the answer.">Linear equation</button>
+        <button class="chip" data-act="sample" data-q="A car travels 150 km in 2.5 hours. Calculate its average speed.">Average speed</button>
+        <button class="chip" data-act="sample" data-q="Explain the difference between ionic and covalent bonding with examples.">Bonding</button>
+        <button class="chip" data-act="sample" data-q="Differentiate y = 3x² + 4x − 5 with respect to x.">Differentiation</button></div></div>
+    </div>
+    <div class="card" id="solCard">
+      <div class="chead"><div><h2>Worked solution</h2><p>Reasoning you can follow</p></div></div>
+      <div id="solArea"><div class="empty"><div class="big">∑</div><h3>Your solution appears here</h3><span>Ask a question or add a photo to begin.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE -->
+<section class="view" data-view="explore" id="view-explore" hidden>
+  <div class="pagehead"><p class="eyebrow">Practice</p><h1>Explore topics</h1><p class="lead">Pick a topic to get a fresh practice question.</p></div>
+  <div class="card pad">
+    <div class="label">Mathematics</div><div class="tgrid" id="gMath"></div>
+    <div class="label">Physics</div><div class="tgrid" id="gPhys"></div>
+    <div class="label">Chemistry</div><div class="tgrid" id="gChem"></div>
+    <div class="ctrl"><input id="customTopic" class="field" maxlength="200" placeholder="Or enter your own topic..." aria-label="Custom topic">
+      <select id="topicDiff" aria-label="Difficulty"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select>
+      <button class="btn primary" data-act="gen-topic">Generate</button></div>
+    <div id="topicResult"></div>
+  </div>
+</section>
+
+<!-- CBT -->
+<section class="view" data-view="cbt" id="view-cbt" hidden>
+  <div id="examSetup">
+    <div class="pagehead"><p class="eyebrow">Computer-based test</p><h1>Practise under exam conditions.</h1><p class="lead">A multiple-choice exam, timed and marked instantly.</p></div>
+    <div class="card setup">
+      <div class="block"><h3>1. What do you want to practise?</h3>
+        <div class="chips" id="subjChips">
+          <button class="chip" data-act="subj" data-t="Mathematics">Mathematics</button><button class="chip" data-act="subj" data-t="WAEC Physics: Mechanics">Physics</button>
+          <button class="chip" data-act="subj" data-t="Chemistry: Stoichiometry and chemical calculations">Chemistry</button><button class="chip" data-act="subj" data-t="Biology">Biology</button>
+          <button class="chip" data-act="subj" data-t="Algebra">Algebra</button><button class="chip" data-act="subj" data-t="Trigonometry">Trigonometry</button>
+          <button class="chip" data-act="subj" data-t="University Calculus: Differentiation">Calculus</button><button class="chip" data-act="subj" data-t="Organic chemistry">Organic chemistry</button></div>
+        <label class="label mt" for="examTopic">Or describe it</label>
+        <textarea id="examTopic" rows="2" maxlength="300" placeholder="e.g. SS3 Mathematics: Quadratic equations"></textarea></div>
+      <div class="block"><h3>2. Time and difficulty</h3>
+        <div class="choices" id="durChoices"><button class="choice" data-act="dur" data-min="10">10 min</button><button class="choice" data-act="dur" data-min="15">15 min</button><button class="choice on" data-act="dur" data-min="20">20 min</button><button class="choice" data-act="dur" data-min="30">30 min</button><button class="choice" data-act="dur" data-min="45">45 min</button><button class="choice" data-act="dur" data-min="60">60 min</button></div>
+        <div class="row wrap mt"><div><label class="label" for="customDur">Custom (1-180 min)</label><input id="customDur" class="field" type="number" min="1" max="180" inputmode="numeric" placeholder="minutes"></div>
+        <div><label class="label" for="examDiff">Difficulty</label><select id="examDiff"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select></div></div>
+        <div class="sum mt" id="examSum"></div></div>
+      <div class="block"><button class="btn primary block" id="startBtn" data-act="start-exam">Generate and start exam</button><div id="examErr"></div><p class="hint">The timer starts only after your exam is ready.</p></div>
+    </div>
+  </div>
+
+  <div id="examActive" hidden>
+    <div class="examtop"><div class="inner"><div class="examtitle"><b id="exTitle">Exam</b><span class="hint" id="exMeta"></span></div>
+      <div class="row"><div class="timer" id="timerBox"><svg class="ic"><use href="#i-clock"/></svg><span id="timer">00:00</span></div><button class="btn primary sm" data-act="submit-open">Submit</button></div></div>
+      <div class="bar mt2"><i id="examProg"></i></div></div>
+    <div class="exgrid">
+      <section class="card pad"><div class="qmeta"><span id="qPos"></span><span id="qTopic"></span></div>
+        <div class="qtext" id="qText"></div><div id="qOpts"></div>
+        <label class="flag"><input type="checkbox" id="flagBox"><svg class="ic"><use href="#i-flag"/></svg>Mark for review</label></section>
+      <aside class="card pad aside-nav"><h3>Questions</h3><p class="hint" id="ansLabel"></p><div class="numgrid"></div>
+        <div class="legend"><span>Blue = answered</span><span>Orange bar = flagged</span></div></aside>
+    </div>
+    <div class="examfoot"><button class="btn" data-act="prev">Back</button><button class="btn only-m" data-act="open-nav"><svg class="ic"><use href="#i-grid"/></svg>List</button><button class="btn primary" data-act="next">Next</button></div>
+  </div>
+
+  <div id="examResults" hidden></div>
+</section>
+
+<!-- ABOUT -->
+<section class="view" data-view="about" id="view-about" hidden>
+  <div class="pagehead"><p class="eyebrow">About</p><h1>Learning built around understanding.</h1><p class="lead">KingMath-AI takes you from a question to a clear explanation, then from practice to confidence.</p></div>
+  <div class="about"><div class="card"><div class="sym">∑</div><h3>Step-by-step solving</h3><p>Structured working, the key principle, and a verification step.</p></div>
+  <div class="card"><div class="sym">▣</div><h3>Camera and photos</h3><p>Snap a printed or handwritten question and get a worked solution.</p></div>
+  <div class="card"><div class="sym">✓</div><h3>Instant CBT marking</h3><p>Submit and see your score, evaluation, topic breakdown and explanations at once.</p></div></div>
+  <div class="card pad mt"><h3>A tutor, not an answer machine</h3><p class="muted"> use our AI as your tutor and personal assistance.</p></div>
+</section>
+
+</main></div></div>
+
+<nav class="tabbar" aria-label="Main navigation">
+  <button class="tab" data-go="solve"><svg class="ic"><use href="#i-solve"/></svg>Solve</button>
+  <button class="tab" data-go="explore"><svg class="ic"><use href="#i-explore"/></svg>Practice</button>
+  <button class="tab" data-go="cbt"><svg class="ic"><use href="#i-cbt"/></svg>Exam</button>
+  <button class="tab" data-go="about"><svg class="ic"><use href="#i-about"/></svg>About</button>
+</nav>
+
+<dialog id="camDlg" class="cam" aria-label="Camera">
+  <div id="camLive"><video id="camVideo" playsinline muted autoplay></video></div>
+  <div id="camReview" hidden><img id="camStill" alt="Captured photo"></div>
+  <div id="camErr"></div>
+  <div class="dactions" id="camBtnsLive"><button class="btn ghost" data-act="cam-close">Cancel</button><button class="btn" data-act="cam-flip"><svg class="ic"><use href="#i-flip"/></svg>Flip</button><button class="btn primary" data-act="cam-shot"><svg class="ic"><use href="#i-camera"/></svg>Capture</button></div>
+  <div class="dactions" id="camBtnsReview" hidden><button class="btn" data-act="cam-retake">Retake</button><button class="btn primary" data-act="cam-use">Use photo</button></div>
+</dialog>
+
+<dialog id="confirmDlg"><h3>Submit examination?</h3><p class="muted" id="confirmText"></p>
+  <div class="dactions"><button class="btn" data-act="close-dlg">Go back</button><button class="btn primary" data-act="confirm-submit">Submit now</button></div></dialog>
+
+<dialog id="navDlg"><h3>Jump to question</h3><p class="hint" id="ansLabel2"></p><div class="numgrid"></div>
+  <div class="dactions"><button class="btn primary" data-act="close-dlg">Done</button></div></dialog>
+
+
+<dialog id="accountDlg" class="cam" style="width:min(680px,calc(100% - 24px));max-height:88vh;overflow:auto">
+ <div class="row between"><div><p class="eyebrow">KINGMATH ACCOUNT</p><h2 style="margin:0">Your learning plan</h2></div><button class="btn ghost" data-act="account-close" aria-label="Close account">✕</button></div>
+ <div id="accountStatus" class="notice info" style="margin:14px 0">Sign in to access your account and daily plan.</div>
+ <div id="authForms" class="card pad" style="margin:12px 0">
+  <div class="row" style="gap:8px"><button class="btn primary" id="showLogin" type="button">Sign in</button><button class="btn" id="showSignup" type="button">Create account</button></div>
+  <form id="authForm" class="mt"><label class="label" for="authEmail">Email address</label><input id="authEmail" type="email" class="field" required autocomplete="email" maxlength="320"><label class="label mt" for="authPassword">Password (minimum 8 characters)</label><input id="authPassword" type="password" class="field" required minlength="8" autocomplete="current-password"><button class="btn primary mt" id="authSubmit" type="submit">Sign in</button><p class="hint mt">Email verification is required. Check your inbox after registration.</p></form>
+ </div>
+ <div id="signedPanel" hidden>
+  <div class="card pad"><div class="row between"><div><div class="hint">SIGNED IN AS</div><strong id="accountEmail"></strong><p class="hint" id="planLabel"></p><p class="hint" id="accountIds"></p></div><span class="badge" id="planBadge">FREE</span></div><div class="row mt" style="gap:8px;flex-wrap:wrap"><button class="btn ghost" id="signOutBtn" type="button">Sign out</button><button class="btn" id="accountAdminBtn" type="button" hidden>Open private admin</button></div></div>
+  <div class="card pad mt"><h3>Payment history</h3><div id="paymentHistory" class="hint">Loading your payment history…</div></div>
+  <div class="card pad mt"><h3>Upgrade to KingMath Pro</h3><p class="hint">Monthly access · Manual renewal · Secure payment verification</p><h2 id="priceLabel">₦5,000 / month</h2><button class="btn primary" id="paystackBtn" type="button">Pay securely with Paystack</button><div class="divider mt"></div><h3>Manual OPay transfer</h3><div id="opayInfo" class="hint">Loading payment instructions…</div><form id="opayForm" class="mt"><label class="label">Payer name</label><input class="field" id="opayName" required maxlength="120"><label class="label mt">Transfer reference / narration</label><input class="field" id="opayRef" required maxlength="160"><label class="label mt">Optional note</label><input class="field" id="opayNote" maxlength="500"><button class="btn mt" type="submit">Submit transfer for review</button></form><p class="hint mt">Submitting a transfer does not activate Pro. Your payment is reviewed by the administrator.</p></div>
+ </div>
+ <div id="accountMsg" aria-live="polite"></div>
+</dialog>
+<dialog id="adminDlg" class="cam" style="width:min(980px,calc(100% - 24px));max-height:90vh;overflow:auto">
+ <div class="row between"><div><p class="eyebrow">RESTRICTED · ADMINISTRATOR ONLY</p><h2 style="margin:0">KingMath Control Centre</h2></div><button class="btn ghost" data-act="admin-close">✕</button></div>
+ <p class="hint">This dashboard is protected by server-side email allowlisting. Hiding this interface is not the security boundary.</p>
+ <div id="adminStats" class="stats mt"></div>
+ <div class="card pad mt"><div class="row between"><h3>Payment review queue</h3><button class="btn sm" id="refreshAdmin">Refresh</button></div><div id="adminPayments" class="mt"></div></div>
+ <div class="card pad mt"><div class="row between"><h3>User management</h3><button class="btn sm" id="refreshUsers" type="button">Load users</button></div><div id="adminUsers" class="mt"><p class="hint">Load the latest registered accounts.</p></div></div>
+ <div class="card pad mt"><h3>Plan settings</h3><form id="adminSettingsForm" class="grid2"><label class="label">Pro monthly price (NGN)<input id="setPrice" class="field" type="number" min="100" required></label><label class="label">Free daily text AI requests<input id="setText" class="field" type="number" min="1" required></label><label class="label">Free daily image AI requests<input id="setImage" class="field" type="number" min="0" required></label><div class="row" style="align-items:end"><button class="btn primary" type="submit">Save settings</button></div></form></div>
+ <div class="card pad mt"><h3>Grant Pro manually</h3><p class="hint">Use only for a verified offline payment or support correction. Every grant is audited.</p><form id="grantForm" class="row"><input id="grantUser" class="field" placeholder="Exact Supabase user UUID" required><button class="btn" type="submit">Grant 1 month</button></form></div>
+ <div id="adminMsg" aria-live="polite"></div>
+</dialog>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script nonce="__NONCE__">
+(()=>{'use strict';
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const API_BASE=(document.querySelector('meta[name=kingmath-api]')?.content||'').replace(/\/$/,'');
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ic=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
+const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
+const S={image:null,imgUrl:null,busy:false,solution:null,question:'',exam:null,examId:null,idx:0,answers:{},review:new Set(),deadline:0,timer:null,submitting:false,examBusy:false,results:null,filter:'all',topicQ:null,dur:20};
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),3800)}
+function notice(el,msg,type='error'){el.innerHTML=msg?`<div class="notice ${type}" role="alert">${esc(msg)}</div>`:''}
+function busyBox(el,msg){el.innerHTML=`<div class="loading"><span class="spin"></span><span>${esc(msg)}</span></div>`}
+
+/* ---- API ---- */
+class ApiError extends Error{constructor(m,s){super(m);this.status=s}}
+async function api(url,o={}){
+  const opt={method:o.method||'GET',headers:{}};
+  const access=sessionStorage.getItem('km_access_token');if(access)opt.headers.Authorization='Bearer '+access;
+  if(o.body instanceof FormData)opt.body=o.body;
+  else if(o.body!==undefined){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(o.body)}
+  let r;try{r=await fetch(API_BASE+url,opt)}catch{throw new ApiError('Unable to reach KingMath-AI. Check your connection and try again.',0)}
+  if(r.status===401&&!url.startsWith('/api/auth/')&&sessionStorage.getItem('km_refresh_token')){
+    try{const rr=await fetch(API_BASE+'/api/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:sessionStorage.getItem('km_refresh_token')})});const rd=await rr.json();if(rr.ok&&rd.access_token){sessionStorage.setItem('km_access_token',rd.access_token);if(rd.refresh_token)sessionStorage.setItem('km_refresh_token',rd.refresh_token);opt.headers.Authorization='Bearer '+rd.access_token;r=await fetch(API_BASE+url,opt)}}catch{}
+  }
+  let d={};try{d=await r.json()}catch{}
+  if(!r.ok)throw new ApiError(typeof d.detail==='string'?d.detail:'The request could not be completed. Please try again.',r.status);
+  return d}
+
+/* ---- theme ---- */
+function setTheme(t){document.documentElement.dataset.theme=t;store.set('km_theme',t);$('meta[name=theme-color]').content=t==='dark'?'#0d111c':'#f5f6fb';
+  $$('[data-act=theme]').forEach(b=>{b.innerHTML=ic(t==='dark'?'sun':'moon')+`<span>${t==='dark'?'Light mode':'Dark mode'}</span>`})}
+setTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
+
+/* ---- router ---- */
+const VIEWS=['solve','explore','cbt','about'];
+function route(){const v=location.hash.slice(1),n=VIEWS.includes(v)?v:'solve';
+  $$('.view').forEach(s=>s.hidden=s.dataset.view!==n);
+  $$('[data-go]').forEach(b=>b.dataset.go===n?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
+  window.scrollTo(0,0)}
+function go(n){location.hash==='#'+n?route():(location.hash=n)}
+addEventListener('hashchange',route);
+
+/* ---- images ---- */
+const MAX_IN=20*1024*1024,MAX_OUT=6.5*1024*1024;
+async function shrink(file){
+  if(!file.type.startsWith('image/'))throw Error('Please choose an image file.');
+  if(file.size>MAX_IN)throw Error('That image is too large (max 20 MB).');
+  let bmp;
+  try{bmp=await createImageBitmap(file,{imageOrientation:'from-image'})}
+  catch{if(/^image\/(png|jpeg|webp)$/.test(file.type)&&file.size<=MAX_OUT)return file;throw Error('That image format is not supported. Try a JPG or PNG.')}
+  const sc=Math.min(1,1600/Math.max(bmp.width,bmp.height)),c=document.createElement('canvas');
+  c.width=Math.max(1,Math.round(bmp.width*sc));c.height=Math.max(1,Math.round(bmp.height*sc));
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(bmp,0,0,c.width,c.height);bmp.close&&bmp.close();
+  let b=await new Promise(r=>c.toBlob(r,'image/jpeg',.86));
+  if(b&&b.size>MAX_OUT)b=await new Promise(r=>c.toBlob(r,'image/jpeg',.6));
+  if(!b||b.size>MAX_OUT)throw Error('Could not make that image small enough. Try a closer photo.');
+  return b}
+async function setImage(file){
+  try{const b=await shrink(file);clearImage();S.image=b;S.imgUrl=URL.createObjectURL(b);
+    $('#imagePreview').innerHTML=`<div class="preview"><img src="${S.imgUrl}" alt="Attached question photo"><div><b>Photo attached</b><br><span class="muted">${(b.size/1024).toFixed(0)} KB, ready to send</span></div><button class="btn sm ghost" data-act="rm-img" aria-label="Remove photo">${ic('x')}</button></div>`;
+    notice($('#solveError'),'')}
+  catch(e){notice($('#solveError'),e.message)}}
+function clearImage(){if(S.imgUrl)URL.revokeObjectURL(S.imgUrl);S.image=S.imgUrl=null;$('#imagePreview').innerHTML='';$('#fileInput').value='';$('#cameraInput').value=''}
+$('#fileInput').addEventListener('change',e=>e.target.files[0]&&setImage(e.target.files[0]));
+$('#cameraInput').addEventListener('change',e=>e.target.files[0]&&setImage(e.target.files[0]));
+const dz=$('#dropzone');
+['dragenter','dragover'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.add('drag')}));
+['dragleave','drop'].forEach(t=>dz.addEventListener(t,e=>{e.preventDefault();dz.classList.remove('drag')}));
+dz.addEventListener('drop',e=>{const f=[...e.dataTransfer.files].find(f=>f.type.startsWith('image/'));f&&setImage(f)});
+document.addEventListener('paste',e=>{if(location.hash!==''&&location.hash!=='#solve')return;const f=[...(e.clipboardData?.files||[])].find(f=>f.type.startsWith('image/'));if(f){e.preventDefault();setImage(f)}});
+
+/* ---- camera ---- */
+let stream=null,facing='environment',shot=null,shotUrl=null;
+function camState(review){$('#camLive').hidden=review;$('#camReview').hidden=!review;$('#camBtnsLive').hidden=review;$('#camBtnsReview').hidden=!review}
+async function startStream(){stopStream();
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1920},height:{ideal:1080}}});
+    const v=$('#camVideo');v.srcObject=stream;await v.play().catch(()=>{});notice($('#camErr'),'')}
+  catch(e){notice($('#camErr'),e&&e.name==='NotAllowedError'?'Camera permission was denied. Allow camera access in your browser settings, or use Upload photo.':'No camera could be started. Use Upload photo instead.')}}
+function stopStream(){stream&&stream.getTracks().forEach(t=>t.stop());stream=null;$('#camVideo').srcObject=null}
+async function openCamera(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.isSecureContext){$('#cameraInput').click();return}
+  camState(false);notice($('#camErr'),'');$('#camDlg').showModal();await startStream()}
+$('#camDlg').addEventListener('close',()=>{stopStream();if(shotUrl){URL.revokeObjectURL(shotUrl);shotUrl=null}shot=null});
+function capture(){const v=$('#camVideo');if(!v.videoWidth){toast('Camera is not ready yet.');return}
+  const c=document.createElement('canvas');c.width=v.videoWidth;c.height=v.videoHeight;c.getContext('2d').drawImage(v,0,0);
+  c.toBlob(b=>{if(!b)return;shot=b;shotUrl=URL.createObjectURL(b);$('#camStill').src=shotUrl;stopStream();camState(true)},'image/jpeg',.92)}
+
+/* ---- solver ---- */
+function setBusy(b){S.busy=b;$$('#solveBtn,[data-a]').forEach(x=>x.disabled=b)}
+async function solve(){
+  if(S.busy)return;const q=$('#question').value.trim();
+  if(!q&&!S.image){notice($('#solveError'),'Enter a question or add a photo first.');return}
+  S.question=q||'Please solve the question shown in the attached image.';setBusy(true);notice($('#solveError'),'');
+  busyBox($('#solArea'),S.image?'Reading your photo and working through it...':'Working through your question...');
+  if(window.matchMedia('(max-width:860px)').matches)$('#solCard').scrollIntoView({behavior:'smooth',block:'start'});
+  try{let s;
+    if(S.image){const fd=new FormData();fd.append('file',S.image,'question.jpg');fd.append('question',q);fd.append('level',$('#level').value);s=await api('/api/solve-image',{method:'POST',body:fd})}
+    else s=await api('/api/solve',{method:'POST',body:{question:q,level:$('#level').value}});
+    S.solution=s;renderSolution(s)}
+  catch(e){$('#solArea').innerHTML=`<div class="empty"><div class="big">!</div><h3>We couldn't finish that</h3><span>${esc(e.message)}</span><button class="btn primary mt" data-act="solve">Try again</button></div>`}
+  finally{setBusy(false)}}
+const sec=(l,b)=>`<div class="sec"><div class="lbl2 mb">${l}</div>${b}</div>`;
+function renderSolution(s){
+  let h=`<div class="sol"><h3>${esc(s.title)}</h3>`;
+  if(s.understanding)h+=sec('Understanding the question',`<p class="pre">${esc(s.understanding)}</p>`);
+  if(s.principle)h+=sec('Key principle',`<div class="callout pre">${esc(s.principle)}</div>`);
+  if(s.steps&&s.steps.length)h+=`<div class="sec"><div class="sechead"><span class="lbl2">Step-by-step working</span><button class="link" data-act="toggle-steps">Expand all</button></div>`+
+    s.steps.map((st,i)=>`<details class="step"${i===0?' open':''}><summary><span class="num">${i+1}</span>${esc(st.title)}</summary><div class="stepbody">${st.working?`<div class="work">${esc(st.working)}</div>`:''}<p class="pre">${esc(st.explanation)}</p></div></details>`).join('')+'</div>';
+  if(s.final_answer)h+=`<div class="sec final"><div class="lbl2 mb">Final answer</div><p class="pre"><b>${esc(s.final_answer)}</b></p></div>`;
+  if(s.verification)h+=sec('Verification',`<p class="pre">${esc(s.verification)}</p>`);
+  if(s.notes&&s.notes!=='similar_question')h+=`<div class="notice pre">${esc(s.notes)}</div>`;
+  h+=`<div class="actions"><button class="btn sm" data-act="action" data-a="clearer">Explain more clearly</button><button class="btn sm" data-act="action" data-a="simpler">Explain simply</button><button class="btn sm" data-act="action" data-a="verify">Verify answer</button><button class="btn sm soft" data-act="action" data-a="similar">Similar question</button></div><div id="actFb"></div></div>`;
+  $('#solArea').innerHTML=h}
+async function runAction(a){
+  if(!S.solution||S.busy)return;setBusy(true);const fb=$('#actFb');
+  busyBox(fb,{clearer:'Making it clearer...',simpler:'Rewriting in simpler words...',similar:'Creating a similar question...',verify:'Independently checking the answer...'}[a]);
+  try{const r=await api('/api/action',{method:'POST',body:{question:S.question,solution:S.solution,action:a,level:$('#level').value}});
+    if(a==='similar'){S.question=String(r.final_answer||'').replace(/^New question:\s*/i,'');$('#question').value=S.question;$('#charCount').textContent=S.question.length+' / 6000';S.solution=null;clearImage();
+      $('#solArea').innerHTML=`<div class="sol"><p class="eyebrow">Practise on your own</p><h3>Your similar question</h3><p class="pre">${esc(S.question)}</p><div class="notice">Try it yourself first. When ready, solve it to compare.</div><button class="btn primary" data-act="solve">Solve this question</button></div>`}
+    else{S.solution=r;renderSolution(r);toast('Updated.')}}
+  catch(e){notice(fb,e.message)}finally{setBusy(false)}}
+function resetSolver(){S.solution=null;S.question='';$('#question').value='';$('#charCount').textContent='0 / 6000';clearImage();notice($('#solveError'),'');
+  $('#solArea').innerHTML='<div class="empty"><div class="big">∑</div><h3>Your solution appears here</h3><span>Ask a question or add a photo to begin.</span></div>'}
+$('#question').addEventListener('input',e=>{$('#charCount').textContent=e.target.value.length+' / 6000'});
+$('#question').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter')solve()});
+
+/* ---- topics ---- */
+const T={m:[['Algebra','Equations and expressions','x'],['Geometry','Shapes and angles','△'],['Trigonometry','Sin, cos, tan','θ'],['Calculus','Limits, derivatives, integrals','∫'],['Statistics','Interpret data','σ'],['Probability','Chance and events','P'],['Mensuration','Area and volume','□'],['Coordinate geometry','Lines and curves','xy'],['Number theory','Primes and factors','ℕ']],
+ p:[['Mechanics','Motion, forces, energy','↗'],['Electricity','Circuits and current','Ω'],['Waves','Frequency and wavelength','〰'],['Optics','Lenses and reflection','◉'],['Thermodynamics','Heat and energy','T'],['Magnetism','Fields and induction','B']],
+ c:[['Organic chemistry','Hydrocarbons, groups','C'],['Chemical bonding','Ionic, covalent, metallic','⚛'],['Acids and bases','pH and salts','pH'],['Stoichiometry','Moles and equations','mol'],['Electrochemistry','Redox and cells','e⁻']]};
+const tg=(id,a)=>{$(id).innerHTML=a.map(([n,d,s])=>`<button class="tcard" data-act="topic-card" data-t="${esc(n)}"><div class="sym">${esc(s)}</div><b>${esc(n)}</b><span class="d">${esc(d)}</span></button>`).join('')};
+tg('#gMath',T.m);tg('#gPhys',T.p);tg('#gChem',T.c);
+async function genTopic(){const topic=$('#customTopic').value.trim();if(!topic){$('#customTopic').focus();return}
+  const out=$('#topicResult');busyBox(out,'Generating a fresh question...');
+  try{const r=await api('/api/topic-question',{method:'POST',body:{topic,difficulty:$('#topicDiff').value}});S.topicQ=r;
+    out.innerHTML=`<div class="card pad mt"><p class="eyebrow">${esc(r.difficulty)} practice</p><h3>${esc(r.topic)}</h3><p class="pre bigq">${esc(r.question)}</p>${r.hint?`<details class="notice"><summary>Need a hint?</summary><p class="pre">${esc(r.hint)}</p></details>`:''}<div class="actions"><button class="btn primary" data-act="topic-solve">Solve with KingMath-AI</button><button class="btn" data-act="topic-exam">Take a CBT on this topic</button></div></div>`;
+    out.scrollIntoView({behavior:'smooth',block:'nearest'})}
+  catch(e){notice(out,e.message)}}
+
+/* ---- CBT setup ---- */
+function curDur(){const c=Number($('#customDur').value);return Number.isInteger(c)&&c>=1&&c<=180?c:S.dur}
+function sumUpdate(){$('#examSum').textContent=`20 questions · ${curDur()} minutes · ${$('#examDiff').value}`}
+$('#customDur').addEventListener('input',()=>{if($('#customDur').value)$$('#durChoices .choice').forEach(x=>x.classList.remove('on'));sumUpdate()});
+$('#examDiff').addEventListener('change',sumUpdate);sumUpdate();
+
+async function startExam(){
+  if(S.examBusy)return;const topic=$('#examTopic').value.trim();
+  if(!topic){notice($('#examErr'),'Choose a subject or describe what you want to practise.');return}
+  const mins=curDur();S.examBusy=true;$('#startBtn').disabled=true;busyBox($('#examErr'),'Building and checking your 20 questions. The timer has not started...');
+  try{const ex=await api('/api/exam/generate',{method:'POST',body:{topic,difficulty:$('#examDiff').value,duration_minutes:mins,level:$('#level').value}});
+    const st=await api(`/api/exam/${ex.exam_id}/start`,{method:'POST',body:{}});notice($('#examErr'),'');loadExam(st)}
+  catch(e){notice($('#examErr'),e.message)}finally{S.examBusy=false;$('#startBtn').disabled=false}}
+
+function showPanel(p){['examSetup','examActive','examResults'].forEach(id=>{$('#'+id).hidden=id!==p});document.body.classList.toggle('in-exam',p==='examActive');window.scrollTo(0,0)}
+function loadExam(st){S.exam=st;S.examId=st.exam_id;S.answers=st.answers||{};S.review=new Set(st.review||[]);S.idx=0;S.results=null;
+  S.deadline=Date.now()+st.remaining_seconds*1000;store.set('km_exam',st.exam_id);
+  $('#exTitle').textContent=st.title;$('#exMeta').textContent=st.subject+' · '+st.difficulty;showPanel('examActive');renderQ();startTimer()}
+
+function renderQ(){const q=S.exam.questions[S.idx],n=S.exam.questions.length;
+  $('#qPos').textContent=`QUESTION ${S.idx+1} OF ${n}`;$('#qTopic').textContent=q.topic||'';$('#qText').textContent=q.question;
+  $('#qOpts').innerHTML='ABCD'.split('').map(k=>`<button class="opt${S.answers[S.idx]===k?' sel':''}" data-act="opt" data-k="${k}" aria-pressed="${S.answers[S.idx]===k}"><span class="l">${k}</span><span class="t">${esc(q.options[k])}</span></button>`).join('');
+  $('#flagBox').checked=S.review.has(S.idx);$('[data-act=prev]').disabled=S.idx===0;$('[data-act=next]').disabled=S.idx===n-1;updNav()}
+function updNav(){const n=S.exam.questions.length,a=Object.keys(S.answers).length;
+  const html=S.exam.questions.map((_,i)=>`<button class="qn${S.answers[i]!==undefined?' ans':''}${S.review.has(i)?' flg':''}${i===S.idx?' cur':''}" data-act="goq" data-q="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('');
+  $$('.numgrid').forEach(g=>g.innerHTML=html);$('#ansLabel').textContent=$('#ansLabel2').textContent=`${a} of ${n} answered`;$('#examProg').style.width=(a/n*100)+'%'}
+async function chooseAnswer(k){if(!S.exam||S.exam.status==='completed'||S.submitting)return;const i=S.idx;S.answers[i]=k;renderQ();
+  try{await api(`/api/exam/${S.examId}/answer`,{method:'POST',body:{question_index:i,answer:k,review:S.review.has(i)}})}
+  catch(e){if(e.status===409||e.status===404)submitExam(true);else toast('Could not save that answer. Check your connection.')}}
+$('#flagBox').addEventListener('change',async()=>{const i=S.idx;$('#flagBox').checked?S.review.add(i):S.review.delete(i);updNav();
+  try{await api(`/api/exam/${S.examId}/answer`,{method:'POST',body:{question_index:i,answer:S.answers[i]??null,review:S.review.has(i)}})}catch{toast('Could not save the flag.')}});
+
+function startTimer(){clearInterval(S.timer);tick();S.timer=setInterval(tick,500)}
+function tick(){const sec=Math.max(0,Math.ceil((S.deadline-Date.now())/1000));
+  $('#timer').textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0');$('#timerBox').classList.toggle('urgent',sec<=60);
+  if(sec<=0){clearInterval(S.timer);submitExam(true)}}
+function openSubmit(){const n=S.exam.questions.length,a=Object.keys(S.answers).length,f=S.review.size;
+  $('#confirmText').textContent=`You answered ${a} of ${n}. ${n-a?`${n-a} unanswered. `:''}${f?`${f} flagged for review. `:''}Submit now and see your results instantly?`;$('#confirmDlg').showModal()}
+
+async function submitExam(auto){
+  if(S.submitting||!S.examId)return;S.submitting=true;clearInterval(S.timer);$('#confirmDlg').close();
+  const sb=$('[data-act=submit-open]');sb.disabled=true;sb.textContent='Marking...';
+  try{const r=await api(`/api/exam/${S.examId}/submit`,{method:'POST',body:{}});store.del('km_exam');S.exam.status='completed';S.results=r;renderResults(r,auto)}
+  catch(e){toast(e.message);S.submitting=false;sb.disabled=false;sb.textContent='Submit';
+    if(auto||S.deadline<=Date.now())setTimeout(()=>submitExam(true),3000);else startTimer();return}
+  S.submitting=false;sb.disabled=false;sb.textContent='Submit'}
+
+/* ---- results ---- */
+const fmt=s=>s>=60?`${Math.floor(s/60)}m ${s%60}s`:`${s}s`;
+const cls=p=>p>=70?'good':p>=50?'mid':'bad';
+function renderResults(r,auto){
+  showPanel('examResults');S.filter='all';const ev=r.evaluation||{},rows=r.review.all;
+  const topics=Object.entries(r.by_topic||{}).map(([t,v])=>{const p=Math.round(v.correct/v.total*100);return `<div class="tp"><div class="row between"><span>${esc(t)}</span><b>${v.correct}/${v.total} · ${p}%</b></div><div class="bar ${cls(p)}"><i data-w="${p}"></i></div></div>`}).join('');
+  $('#examResults').innerHTML=`
+  ${auto?'<div class="notice">Time is up. Your exam was submitted automatically.</div>':''}
+  <div class="card"><div class="hero-r"><p class="eyebrow">Exam complete</p><h2>${esc(r.title)}</h2>
+    <div class="ring ${cls(r.percentage)}" data-p="${r.percentage}"><div><strong>${r.score}/${r.total}</strong><span class="hint">${r.percentage}%</span></div></div>
+    <span class="band">${esc(ev.band||'')}</span><p class="muted center-p">${esc(ev.summary||'')}</p></div>
+  <div class="pad"><div class="stats"><div class="stat g"><strong>${r.correct_count}</strong><span>Correct</span></div><div class="stat b"><strong>${r.incorrect_count}</strong><span>Incorrect</span></div><div class="stat w"><strong>${r.unanswered_count}</strong><span>Unanswered</span></div><div class="stat"><strong>${fmt(r.time_used_seconds)}</strong><span>of ${fmt(r.duration_seconds)}</span></div></div></div></div>
+  <div class="grid2 mt"><div class="card pad"><h3>Evaluation</h3>
+    ${ev.strengths&&ev.strengths.length?`<p class="lbl2">Strengths</p><div class="chips">${ev.strengths.map(t=>`<span class="badge correct">${esc(t)}</span>`).join('')}</div>`:''}
+    ${ev.focus&&ev.focus.length?`<p class="lbl2 mt">Focus areas</p><div class="chips">${ev.focus.map(t=>`<span class="badge incorrect">${esc(t)}</span>`).join('')}</div>`:''}
+    <p class="lbl2 mt">Next steps</p><ul class="tips">${(ev.tips||[]).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+  <div class="card pad"><h3>Topic performance</h3>${topics}</div></div>
+  <div class="actions"><button class="btn primary" data-act="new-exam">New exam</button><button class="btn" data-act="weak-exam">Practise weak topics</button><button class="btn" data-act="analyse">Analyse pitfalls</button><button class="btn" data-act="to-solver">Back to solver</button></div>
+  <div id="analysis"></div>
+  <h2 class="mt3">Review your answers</h2><div id="tabs" class="tabs"></div><div id="rlist"></div>`;
+  $$('[data-w]').forEach(e=>e.style.width=e.dataset.w+'%');$$('.ring').forEach(e=>e.style.setProperty('--p',e.dataset.p));
+  renderReview();window.scrollTo(0,0)}
+function renderReview(){const r=S.results,rows=r.review.all;
+  const f={all:()=>true,incorrect:x=>x.status==='incorrect',unanswered:x=>x.status==='unanswered',correct:x=>x.status==='correct',flagged:x=>x.flagged};
+  const cnt=k=>rows.filter(f[k]).length,L={all:'All',incorrect:'Incorrect',unanswered:'Unanswered',correct:'Correct',flagged:'Flagged'};
+  $('#tabs').innerHTML=Object.keys(L).map(k=>`<button class="chip${S.filter===k?' on':''}" data-act="filter" data-f="${k}">${L[k]} (${cnt(k)})</button>`).join('');
+  const list=rows.filter(f[S.filter]);
+  $('#rlist').innerHTML=list.length?list.map(x=>`<article class="ritem ${x.status}"><div class="row between wrap"><span class="hint"><b>Q${x.index+1}</b> · ${esc(x.topic)}</span><span class="row"><span class="badge ${x.status}">${x.status==='correct'?'✓ Correct':x.status==='incorrect'?'✗ Incorrect':'— Unanswered'}</span>${x.flagged?`<span class="badge flagged">${ic('flag')}Flagged</span>`:''}</span></div>
+   <p class="pre qq">${esc(x.question)}</p>
+   ${'ABCD'.split('').map(k=>`<div class="ropt${k===x.correct_answer?' good':k===x.selected?' bad':''}"><b>${k}.</b> ${esc(x.options[k])}${k===x.correct_answer?' ✓ Correct answer':''}${k===x.selected&&k!==x.correct_answer?' ✗ Your answer':''}${k===x.selected&&k===x.correct_answer?' (your answer)':''}</div>`).join('')}
+   <div class="expl"><b>Explanation:</b> ${esc(x.explanation)}</div></article>`).join(''):'<div class="notice">Nothing to show in this filter.</div>'}
+async function analyse(){const a=$('#analysis');busyBox(a,'Looking for patterns in your mistakes...');
+  try{const r=await api(`/api/exam/${S.examId}/analyse`,{method:'POST',body:{}});
+    a.innerHTML=`<div class="card pad mt"><h3>Common pitfalls</h3><p>${esc(r.summary)}</p>${(r.insights||[]).map(i=>`<div class="ritem"><span class="badge flagged">${esc(i.badge)}</span> <b>Q${Number(i.question_number)||'?'} · ${esc(i.confidence)} evidence</b><p>${esc(i.evidence)}</p><p><b>Why it may be wrong:</b> ${esc(i.why_incorrect)}</p><p><b>Correct reasoning:</b> ${esc(i.correct_reasoning)}</p><p><b>Try next time:</b> ${esc(i.advice)}</p></div>`).join('')}</div>`}
+  catch(e){notice(a,e.message)}}
+async function resume(){const id=store.get('km_exam');if(!id)return;
+  try{const st=await api('/api/exam/'+encodeURIComponent(id));
+    if(st.status==='active'){loadExam(st);go('cbt');toast('Welcome back. Your exam is still running.')}
+    else if(st.status==='completed'){S.examId=id;S.exam=st;S.results=await api(`/api/exam/${id}/results`);store.del('km_exam');renderResults(S.results,false);go('cbt')}
+    else store.del('km_exam')}catch{store.del('km_exam')}}
+
+/* ---- events ---- */
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  switch(a){
+    case 'theme':setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');break;
+    case 'solve':solve();break;
+    case 'clear':if(($('#question').value.trim()||S.solution||S.image)&&!confirm('Clear the question and solution?'))break;resetSolver();break;
+    case 'sample':$('#question').value=b.dataset.q;$('#charCount').textContent=b.dataset.q.length+' / 6000';$('#question').focus();break;
+    case 'pick-file':$('#fileInput').click();break;
+    case 'open-cam':openCamera();break;
+    case 'rm-img':clearImage();break;
+    case 'cam-close':$('#camDlg').close();break;
+    case 'cam-flip':facing=facing==='environment'?'user':'environment';startStream();break;
+    case 'cam-shot':capture();break;
+    case 'cam-retake':camState(false);startStream();break;
+    case 'cam-use':{const f=shot;$('#camDlg').close();f&&setImage(f);break}
+    case 'toggle-steps':{const ds=$$('.step'),open=ds.some(d=>!d.open);ds.forEach(d=>d.open=open);b.textContent=open?'Collapse all':'Expand all';break}
+    case 'action':runAction(b.dataset.a);break;
+    case 'topic-card':$('#customTopic').value=b.dataset.t;genTopic();break;
+    case 'gen-topic':genTopic();break;
+    case 'topic-solve':go('solve');$('#question').value=S.topicQ.question;$('#charCount').textContent=S.topicQ.question.length+' / 6000';$('#question').focus();break;
+    case 'topic-exam':$('#examTopic').value=S.topicQ.topic;go('cbt');showPanel('examSetup');break;
+    case 'subj':$('#examTopic').value=b.dataset.t;$$('#subjChips .chip').forEach(x=>x.classList.toggle('on',x===b));break;
+    case 'dur':$$('#durChoices .choice').forEach(x=>x.classList.toggle('on',x===b));$('#customDur').value='';S.dur=Number(b.dataset.min);sumUpdate();break;
+    case 'start-exam':startExam();break;
+    case 'opt':chooseAnswer(b.dataset.k);break;
+    case 'prev':if(S.idx>0){S.idx--;renderQ()}break;
+    case 'next':if(S.idx<S.exam.questions.length-1){S.idx++;renderQ()}break;
+    case 'goq':S.idx=Number(b.dataset.q);renderQ();$('#navDlg').open&&$('#navDlg').close();break;
+    case 'open-nav':$('#navDlg').showModal();break;
+    case 'submit-open':openSubmit();break;
+    case 'confirm-submit':submitExam(false);break;
+    case 'close-dlg':b.closest('dialog').close();break;
+    case 'filter':S.filter=b.dataset.f;renderReview();break;
+    case 'analyse':analyse();break;
+    case 'new-exam':S.exam=S.examId=null;showPanel('examSetup');break;
+    case 'weak-exam':{const f=(S.results.evaluation.focus||[]);$('#examTopic').value=(f.length?S.results.topic+': '+f.join(', '):S.results.topic).slice(0,300);showPanel('examSetup');break}
+    case 'to-solver':go('solve');break;
+  }});
+document.addEventListener('keydown',e=>{
+  if($('#examActive').hidden||document.querySelector('dialog[open]')||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
+  const k=e.key.toUpperCase();
+  if('ABCD'.includes(k)&&k.length===1)chooseAnswer(k);else if('1234'.includes(k)&&k.length===1)chooseAnswer('ABCD'[Number(k)-1]);
+  else if(e.key==='ArrowRight'&&S.idx<S.exam.questions.length-1){S.idx++;renderQ()}else if(e.key==='ArrowLeft'&&S.idx>0){S.idx--;renderQ()}});
+addEventListener('beforeunload',e=>{if(!$('#examActive').hidden){e.preventDefault();e.returnValue=''}});
+
+route();resume();
+
+
+/* ---- secure account, Pro checkout and private admin ---- */
+let authMode='login',accountData=null;
+function accountMsg(m,err=false){$('#accountMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt">${esc(m)}</div>`:''}
+function adminMsg(m,err=false){$('#adminMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt">${esc(m)}</div>`:''}
+function authModeSet(mode){authMode=mode;$('#authSubmit').textContent=mode==='login'?'Sign in':'Create account';$('#showLogin').classList.toggle('primary',mode==='login');$('#showSignup').classList.toggle('primary',mode==='signup')}
+async function refreshAccount(){
+ if(!sessionStorage.getItem('km_access_token')){accountData=null;$('#authForms').hidden=false;$('#signedPanel').hidden=true;$('#accountStatus').textContent='Sign in or create an account to use KingMath-AI.';$('#adminNav').hidden=true;return}
+ try{accountData=await api('/api/me');$('#authForms').hidden=true;$('#signedPanel').hidden=false;$('#accountStatus').textContent='Your account is active.';$('#accountEmail').textContent=accountData.email;$('#planLabel').textContent=accountData.plan==='pro'?'Pro access is active until '+(accountData.subscription?.expires_at||'expiry date'):'Free plan · Daily limits apply';$('#planBadge').textContent=accountData.plan.toUpperCase();$('#accountIds').textContent='Account ID: '+accountData.user_id+(accountData.subscription?' · Subscription ID: '+accountData.subscription.id:'');loadPaymentHistory();$('#priceLabel').textContent='₦'+Number(accountData.price_ngn).toLocaleString('en-NG')+' / month';$('#adminNav').hidden=!accountData.is_admin;$('#accountAdminBtn').hidden=!accountData.is_admin;
+ if(accountData.plan==='pro'){$('#paystackBtn').disabled=true;$('#paystackBtn').textContent='Pro is active';$('#opayForm').hidden=true}else{$('#paystackBtn').disabled=false;$('#paystackBtn').textContent='Pay securely with Paystack';$('#opayForm').hidden=false;loadOpay()}
+ }catch(e){sessionStorage.removeItem('km_access_token');sessionStorage.removeItem('km_refresh_token');accountData=null;$('#authForms').hidden=false;$('#signedPanel').hidden=true;$('#accountStatus').textContent=e.message;$('#adminNav').hidden=true}
+}
+async function loadPaymentHistory(){try{const rows=await api('/api/payments/history');$('#paymentHistory').innerHTML=rows.length?`<div style="overflow:auto"><table><thead><tr><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.reference)}</td><td>₦${(Number(x.amount_kobo)/100).toLocaleString('en-NG')}</td><td>${esc(x.status)}</td><td>${esc(new Date(x.created_at).toLocaleDateString())}</td></tr>`).join('')}</tbody></table></div>`:'No payments yet.'}catch(e){$('#paymentHistory').textContent=e.message}}
+async function loadOpay(){try{const d=await api('/api/payments/opay/instructions');$('#opayInfo').innerHTML=`<p><b>${esc(d.bank_name)}</b><br>Account name: <b>${esc(d.account_name||'Not configured')}</b><br>Account number: <b>${esc(d.account_number||'Not configured')}</b><br>Amount: <b>₦${Number(d.amount_ngn).toLocaleString('en-NG')}</b></p><p>${esc(d.instructions||'')}</p>`}catch(e){$('#opayInfo').textContent=e.message}}
+async function openAccount(){if(!$('#accountDlg').open)$('#accountDlg').showModal();accountMsg('');await refreshAccount()}
+$('#showLogin').addEventListener('click',()=>authModeSet('login'));$('#showSignup').addEventListener('click',()=>authModeSet('signup'));
+$('#authForm').addEventListener('submit',async e=>{e.preventDefault();accountMsg('');const payload={email:$('#authEmail').value.trim(),password:$('#authPassword').value};try{const d=await api(authMode==='login'?'/api/auth/login':'/api/auth/signup',{method:'POST',body:payload});if(authMode==='signup'){accountMsg(d.message);return}if(!d.access_token)throw Error('Sign-in did not return a session.');sessionStorage.setItem('km_access_token',d.access_token);if(d.refresh_token)sessionStorage.setItem('km_refresh_token',d.refresh_token);await refreshAccount();accountMsg('Welcome back. Your account is ready.')}catch(e){accountMsg(e.message,true)}});
+$('#accountAdminBtn').addEventListener('click',()=>{if($('#accountDlg').open)$('#accountDlg').close();openAdmin()});
+$('#signOutBtn').addEventListener('click',()=>{sessionStorage.removeItem('km_access_token');sessionStorage.removeItem('km_refresh_token');refreshAccount();accountMsg('You have signed out.')});
+$('#paystackBtn').addEventListener('click',async()=>{try{const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{}});location.href=d.authorization_url}catch(e){accountMsg(e.message,true)}});
+$('#opayForm').addEventListener('submit',async e=>{e.preventDefault();try{const d=await api('/api/payments/opay/submit',{method:'POST',body:{payer_name:$('#opayName').value,transfer_reference:$('#opayRef').value,note:$('#opayNote').value}});accountMsg(d.message+' Reference: '+d.reference);e.target.reset()}catch(e){accountMsg(e.message,true)}});
+async function openAdmin(){if(!accountData?.is_admin){adminMsg('Access denied.',true);return}$('#adminDlg').showModal();await refreshAdmin()}
+async function refreshAdmin(){try{const [o,p,s,users]=await Promise.all([api('/api/admin/overview'),api('/api/admin/payments'),api('/api/admin/settings'),api('/api/admin/users')]);$('#adminStats').innerHTML=`<div class="card pad"><div class="hint">USERS</div><h2>${o.users_count}</h2></div><div class="card pad"><div class="hint">ACTIVE PRO</div><h2>${o.active_pro_count}</h2></div><div class="card pad"><div class="hint">PENDING OPay</div><h2>${o.pending_payments}</h2></div>`;$('#adminPayments').innerHTML=p.length?`<table><thead><tr><th>Reference / user</th><th>Amount</th><th>Channel / status</th><th>Review</th></tr></thead><tbody>${p.map(x=>`<tr><td><b>${esc(x.reference)}</b><br><small>${esc(x.user_id)}</small><br><small>${esc(x.payer_name||'')}</small></td><td>₦${(Number(x.amount_kobo||0)/100).toLocaleString('en-NG')}</td><td>${esc(x.channel)}<br>${esc(x.status)}</td><td>${x.channel==='opay_manual'&&x.status==='pending_review'?`<button class="btn sm primary" data-review="approve" data-id="${esc(x.id)}">Approve</button><button class="btn sm" data-review="reject" data-id="${esc(x.id)}">Reject</button>`:'—'}</td></tr>`).join('')}</tbody></table>`:'<p class="hint">No payment records yet.</p>';$('#setPrice').value=s.pro_price_ngn;$('#setText').value=s.free_ai_text_daily;$('#setImage').value=s.free_ai_image_daily;renderAdminUsers(users)}catch(e){adminMsg(e.message,true)}}
+$('#refreshAdmin').addEventListener('click',refreshAdmin);
+function renderAdminUsers(users){$('#adminUsers').innerHTML=users.length?`<div style="overflow:auto"><table><thead><tr><th>Email / UUID</th><th>Plan</th><th>Expiry</th><th>Action</th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.email)}</b><br><small>${esc(u.id)}</small></td><td>${esc(u.subscription?.status||'free')}</td><td>${esc(u.subscription?.expires_at||'—')}</td><td><button class="btn sm" data-grant-user="${esc(u.id)}">Grant 1 month</button><button class="btn sm" data-revoke-user="${esc(u.id)}">Revoke Pro</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="hint">No users found.</p>'}
+$('#refreshUsers').addEventListener('click',async()=>{try{renderAdminUsers(await api('/api/admin/users'))}catch(e){adminMsg(e.message,true)}});
+$('#adminUsers').addEventListener('click',async e=>{const grant=e.target.closest('[data-grant-user]');const revoke=e.target.closest('[data-revoke-user]');if(!grant&&!revoke)return;const uid=(grant||revoke).dataset[grant?'grantUser':'revokeUser'];if(!confirm(grant?'Grant this account one month of Pro?':'Immediately revoke this account’s active Pro access?'))return;try{await api(grant?'/api/admin/subscription/grant':'/api/admin/subscription/revoke',{method:'POST',body:{user_id:uid}});adminMsg(grant?'Pro access granted.':'Pro access revoked.');await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
+$('#adminPayments').addEventListener('click',async e=>{const b=e.target.closest('[data-review]');if(!b)return;let note='Verified transfer';if(b.dataset.review==='reject'){const entered=prompt('Reason for rejection (optional):');if(entered===null)return;note=entered;}try{await api('/api/admin/payment-decision',{method:'POST',body:{payment_id:b.dataset.id,decision:b.dataset.review,note}});adminMsg('Payment decision saved.');await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
+$('#adminSettingsForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('/api/admin/settings',{method:'PUT',body:{pro_price_ngn:Number($('#setPrice').value),free_ai_text_daily:Number($('#setText').value),free_ai_image_daily:Number($('#setImage').value)}});adminMsg('Plan settings saved.');await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
+$('#grantForm').addEventListener('submit',async e=>{e.preventDefault();if(!confirm('Grant this account one month of Pro access?'))return;try{await api('/api/admin/subscription/grant',{method:'POST',body:{user_id:$('#grantUser').value.trim()}});adminMsg('Pro access granted for one month.');e.target.reset();await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(a==='account-open')openAccount();if(a==='account-close')$('#accountDlg').close();if(a==='admin-open')openAdmin();if(a==='admin-close')$('#adminDlg').close()});
+// Paystack redirects back with a reference. This browser callback only asks the backend to verify.
+(async()=>{const u=new URL(location.href);if(u.searchParams.get('payment')==='paystack'){const ref=u.searchParams.get('reference');if(ref&&sessionStorage.getItem('km_access_token')){try{await api('/api/payments/paystack/verify?reference='+encodeURIComponent(ref));toast('Payment verified. Pro is now active.')}catch(e){toast(e.message)} }u.searchParams.delete('payment');u.searchParams.delete('reference');history.replaceState({},'',u.pathname+u.hash)}await refreshAccount()})();
+
+})();;
+</script>
+</body>
+</html>
