@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://knexa-backend.onrender.com/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://knexa-backend.onrender.com/health"
+    }
+  ]
+}
