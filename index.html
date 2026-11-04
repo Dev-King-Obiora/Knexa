@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="kingmath-api" content="">
+<!-- Leave blank when this page is served by the Knexa FastAPI backend. For Vercel, set content to your exact Render service URL, e.g. https://your-service.onrender.com -->
+<meta name="knexa-api" content="">
 <meta name="theme-color" content="#f5f6fb">
 <meta name="referrer" content="no-referrer">
-<title>KingMath-AI - Learn with clarity</title>
+<title>Knexa AI - Learn with clarity</title>
 <script nonce="__NONCE__">try{var t=localStorage.getItem('km_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
 <style nonce="__NONCE__">
 :root{--bg:#f5f6fb;--surface:#fff;--surface2:#f0f2f9;--text:#141a2e;--muted:#667089;--line:#e3e7f1;--primary:#4f46e5;--on-primary:#fff;--primary-soft:#eceafe;--good:#12805c;--good-soft:#e3f6ee;--bad:#c2343f;--bad-soft:#fdeaec;--warn:#a96a0b;--warn-soft:#fff3dc;--shadow:0 1px 2px rgba(20,26,46,.04),0 10px 30px rgba(20,26,46,.06);color-scheme:light;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -87,7 +88,7 @@ textarea{min-height:140px;resize:vertical;line-height:1.6}
 .examtitle{min-width:0}.examtitle b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .timer{font-variant-numeric:tabular-nums;font-weight:850;font-size:19px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 13px;display:flex;gap:7px;align-items:center}
 .timer.urgent{color:var(--bad);border-color:var(--bad)}
-.bar{height:6px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--primary);border-radius:9px;transition:width .3s}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--primary);border-radius:9px;transition:width .3s}
 .bar.good i{background:var(--good)}.bar.bad i{background:var(--bad)}.bar.mid i{background:var(--warn)}
 .exgrid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:16px;align-items:start}
 .qmeta{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:700;color:var(--muted)}
@@ -152,6 +153,64 @@ dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
 #adminPayments button{margin:2px}.divider{height:1px;background:var(--line)}
 @media(max-width:600px){dialog.cam{padding:16px}.grid2{grid-template-columns:1fr}#adminPayments{overflow:auto}}
 
+
+/* Knexa AI — refined, calm interface layer */
+:root{
+  --bg:#f4f6fa;--surface:#ffffff;--surface2:#f0f3f8;--text:#172238;
+  --muted:#68758b;--line:#e1e7f0;--primary:#244c78;--on-primary:#ffffff;
+  --primary-soft:#eaf1f8;--good:#187653;--good-soft:#e8f5ef;
+  --bad:#b83a48;--bad-soft:#faecee;--warn:#956313;--warn-soft:#fbf3e4;
+  --shadow:0 2px 5px rgba(19,36,59,.035),0 12px 34px rgba(19,36,59,.055);
+}
+[data-theme=dark]{
+  --bg:#101827;--surface:#172235;--surface2:#202d42;--text:#edf2fa;
+  --muted:#a4b1c5;--line:#2b3a51;--primary:#8eafd1;--on-primary:#101827;
+  --primary-soft:#24384f;--good:#65c49b;--good-soft:#193b32;
+  --bad:#f08b95;--bad-soft:#40252e;--warn:#e8bd70;--warn-soft:#40351f;
+  --shadow:0 12px 34px rgba(0,0,0,.22);
+}
+body{letter-spacing:.005em}
+.shell{grid-template-columns:258px minmax(0,1fr)}
+.side{padding:25px 16px;background:var(--surface)}
+.brand{padding:3px 10px 26px;font-size:19px}
+.mark{background:#244c78;border-radius:12px;box-shadow:0 3px 8px rgba(36,76,120,.16)}
+.nav-item{padding:12px 13px;border-radius:11px;transition:background .15s ease,color .15s ease}
+.nav-item[aria-current=page]{background:var(--primary-soft);color:var(--primary)}
+.page{max-width:1160px;padding:38px 30px 70px}
+.pagehead{margin-bottom:26px}
+.eyebrow{letter-spacing:1.25px}
+h1{font-weight:760;letter-spacing:-1.15px}
+.lead{font-size:15.5px;line-height:1.7}
+.card{border-radius:17px;box-shadow:var(--shadow)}
+.pad{padding:23px}
+textarea,select,.field{border-radius:11px;transition:border-color .15s ease,box-shadow .15s ease}
+textarea:focus,select:focus,.field:focus{box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 12%,transparent)}
+.btn{border-radius:11px;transition:background .15s ease,border-color .15s ease,transform .12s ease}
+.btn.primary{background:#244c78;border-color:#244c78;color:#fff}
+[data-theme=dark] .btn.primary{background:#8eafd1;border-color:#8eafd1;color:#101827}
+.btn.primary:hover{filter:brightness(1.06)}
+.chip,.choice,.opt,.tcard,.qn{transition:border-color .14s ease,background .14s ease,color .14s ease}
+.tcard{border-radius:13px}
+.tcard:hover{transform:translateY(-1px)}
+.attach{border-radius:13px}
+.step{border-radius:12px}
+.final{border:1px solid color-mix(in srgb,var(--good) 18%,var(--line))}
+.examtop{backdrop-filter:blur(8px)}
+.timer{border-radius:11px}
+dialog.cam{border-radius:18px}
+#toast{box-shadow:0 8px 28px rgba(0,0,0,.16)}
+button:disabled{opacity:.52;cursor:not-allowed}
+@media(max-width:860px){
+ .page{padding:23px 15px calc(100px + env(safe-area-inset-bottom))}
+ .mtop{padding:13px 15px}
+ .grid2{gap:14px}
+ .pad{padding:18px}
+ .pagehead{margin-bottom:20px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
 </style>
 </head>
 <body>
@@ -173,7 +232,7 @@ dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
 
 <div class="shell">
 <aside class="side" aria-label="Main navigation">
-  <div class="brand"><div class="mark">K</div><div>KingMath-AI<small>LEARN WITH CLARITY</small></div></div>
+  <div class="brand"><div class="mark">N</div><div>Knexa AI<small>LEARN WITH CLARITY</small></div></div>
   <button class="nav-item" data-go="solve"><svg class="ic"><use href="#i-solve"/></svg>Solve</button>
   <button class="nav-item" data-go="explore"><svg class="ic"><use href="#i-explore"/></svg>Practice topics</button>
   <button class="nav-item" data-go="cbt"><svg class="ic"><use href="#i-cbt"/></svg>CBT exam</button>
@@ -185,7 +244,7 @@ dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
 </aside>
 
 <div class="main">
-<header class="mtop"><div class="brand"><div class="mark">K</div>KingMath-AI</div><div class="row" style="gap:8px"><button class="btn sm" data-act="account-open">Account</button><button class="btn sm" data-act="theme" aria-label="Toggle theme"></button></div></header>
+<header class="mtop"><div class="brand"><div class="mark">N</div>Knexa AI</div><div class="row" style="gap:8px"><button class="btn sm" data-act="account-open">Account</button><button class="btn sm" data-act="theme" aria-label="Toggle theme"></button></div></header>
 <main class="page">
 
 <!-- SOLVE -->
@@ -276,7 +335,7 @@ dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
 
 <!-- ABOUT -->
 <section class="view" data-view="about" id="view-about" hidden>
-  <div class="pagehead"><p class="eyebrow">About</p><h1>Learning built around understanding.</h1><p class="lead">KingMath-AI takes you from a question to a clear explanation, then from practice to confidence.</p></div>
+  <div class="pagehead"><p class="eyebrow">About</p><h1>Learning built around understanding.</h1><p class="lead">Knexa AI takes you from a question to a clear explanation, then from practice to confidence.</p></div>
   <div class="about"><div class="card"><div class="sym">∑</div><h3>Step-by-step solving</h3><p>Structured working, the key principle, and a verification step.</p></div>
   <div class="card"><div class="sym">▣</div><h3>Camera and photos</h3><p>Snap a printed or handwritten question and get a worked solution.</p></div>
   <div class="card"><div class="sym">✓</div><h3>Instant CBT marking</h3><p>Submit and see your score, evaluation, topic breakdown and explanations at once.</p></div></div>
@@ -308,27 +367,38 @@ dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
 
 
 <dialog id="accountDlg" class="cam" style="width:min(680px,calc(100% - 24px));max-height:88vh;overflow:auto">
- <div class="row between"><div><p class="eyebrow">KINGMATH ACCOUNT</p><h2 style="margin:0">Your learning plan</h2></div><button class="btn ghost" data-act="account-close" aria-label="Close account">✕</button></div>
+ <div class="row between"><div><p class="eyebrow">KNEXA ACCOUNT</p><h2 style="margin:0">Your learning plan</h2></div><button class="btn ghost" data-act="account-close" aria-label="Close account">✕</button></div>
  <div id="accountStatus" class="notice info" style="margin:14px 0">Sign in to access your account and daily plan.</div>
  <div id="authForms" class="card pad" style="margin:12px 0">
-  <div class="row" style="gap:8px"><button class="btn primary" id="showLogin" type="button">Sign in</button><button class="btn" id="showSignup" type="button">Create account</button></div>
-  <form id="authForm" class="mt"><label class="label" for="authEmail">Email address</label><input id="authEmail" type="email" class="field" required autocomplete="email" maxlength="320"><label class="label mt" for="authPassword">Password (minimum 8 characters)</label><input id="authPassword" type="password" class="field" required minlength="8" autocomplete="current-password"><button class="btn primary mt" id="authSubmit" type="submit">Sign in</button><p class="hint mt">Email verification is required. Check your inbox after registration.</p></form>
+  <div class="row" style="gap:8px"><button class="btn primary" id="showLogin" type="button">Sign in</button><button class="btn" id="showSignup" type="button">Create Knexa ID</button></div>
+  <form id="authForm" class="mt">
+   <div id="loginFields"><label class="label" for="authKnexaId">Knexa ID</label><input id="authKnexaId" class="field" required autocomplete="username" maxlength="32" placeholder="KNX-ABCD-2345"><label class="label mt" for="authAccessCode">Private access code</label><input id="authAccessCode" type="password" class="field" required minlength="8" autocomplete="current-password"></div>
+   <div id="createFields" hidden><p class="hint">Knexa creates your unique ID, access code and private recovery code automatically. Save them securely when they appear.</p></div>
+   <button class="btn primary mt" id="authSubmit" type="submit">Sign in</button>
+   <button class="btn ghost mt" id="showRecovery" type="button">Recover account / reset access code</button>
+  </form>
+  <form id="recoveryForm" class="mt" hidden>
+   <h3>Secure account recovery</h3><label class="label">Knexa ID</label><input id="recoverId" class="field" required maxlength="32" placeholder="KNX-ABCD-2345">
+   <label class="label mt">Private recovery code</label><input id="recoverCode" class="field" required maxlength="128">
+   <label class="label mt">New access code</label><input id="recoverNewCode" type="password" class="field" required minlength="8" maxlength="64">
+   <button class="btn primary mt" type="submit">Reset access code</button><button class="btn ghost mt" id="cancelRecovery" type="button">Back to sign in</button>
+  </form>
  </div>
  <div id="signedPanel" hidden>
   <div class="card pad"><div class="row between"><div><div class="hint">SIGNED IN AS</div><strong id="accountEmail"></strong><p class="hint" id="planLabel"></p><p class="hint" id="accountIds"></p></div><span class="badge" id="planBadge">FREE</span></div><div class="row mt" style="gap:8px;flex-wrap:wrap"><button class="btn ghost" id="signOutBtn" type="button">Sign out</button><button class="btn" id="accountAdminBtn" type="button" hidden>Open private admin</button></div></div>
   <div class="card pad mt"><h3>Payment history</h3><div id="paymentHistory" class="hint">Loading your payment history…</div></div>
-  <div class="card pad mt"><h3>Upgrade to KingMath Pro</h3><p class="hint">Monthly access · Manual renewal · Secure payment verification</p><h2 id="priceLabel">₦5,000 / month</h2><button class="btn primary" id="paystackBtn" type="button">Pay securely with Paystack</button><div class="divider mt"></div><h3>Manual OPay transfer</h3><div id="opayInfo" class="hint">Loading payment instructions…</div><form id="opayForm" class="mt"><label class="label">Payer name</label><input class="field" id="opayName" required maxlength="120"><label class="label mt">Transfer reference / narration</label><input class="field" id="opayRef" required maxlength="160"><label class="label mt">Optional note</label><input class="field" id="opayNote" maxlength="500"><button class="btn mt" type="submit">Submit transfer for review</button></form><p class="hint mt">Submitting a transfer does not activate Pro. Your payment is reviewed by the administrator.</p></div>
+  <div class="card pad mt"><h3>Upgrade to Knexa Pro</h3><p class="hint">30 days of full access · Manual renewal · Secure Paystack checkout</p><h2 id="priceLabel">₦3,500 / 30 days</h2><label class="label mt" for="paystackEmail">Receipt email (for Paystack only; no Knexa email account or verification)</label><input class="field" id="paystackEmail" type="email" maxlength="320" placeholder="you@example.com"><button class="btn primary mt" id="paystackBtn" type="button">Pay ₦3,500 securely with Paystack</button><p class="hint mt">Pro activates only after the backend verifies the successful Paystack payment. Renew manually after 30 days.</p></div>
  </div>
  <div id="accountMsg" aria-live="polite"></div>
 </dialog>
 <dialog id="adminDlg" class="cam" style="width:min(980px,calc(100% - 24px));max-height:90vh;overflow:auto">
- <div class="row between"><div><p class="eyebrow">RESTRICTED · ADMINISTRATOR ONLY</p><h2 style="margin:0">KingMath Control Centre</h2></div><button class="btn ghost" data-act="admin-close">✕</button></div>
+ <div class="row between"><div><p class="eyebrow">RESTRICTED · ADMINISTRATOR ONLY</p><h2 style="margin:0">Knexa Control Centre</h2></div><button class="btn ghost" data-act="admin-close">✕</button></div>
  <p class="hint">This dashboard is protected by server-side email allowlisting. Hiding this interface is not the security boundary.</p>
  <div id="adminStats" class="stats mt"></div>
  <div class="card pad mt"><div class="row between"><h3>Payment review queue</h3><button class="btn sm" id="refreshAdmin">Refresh</button></div><div id="adminPayments" class="mt"></div></div>
  <div class="card pad mt"><div class="row between"><h3>User management</h3><button class="btn sm" id="refreshUsers" type="button">Load users</button></div><div id="adminUsers" class="mt"><p class="hint">Load the latest registered accounts.</p></div></div>
- <div class="card pad mt"><h3>Plan settings</h3><form id="adminSettingsForm" class="grid2"><label class="label">Pro monthly price (NGN)<input id="setPrice" class="field" type="number" min="100" required></label><label class="label">Free daily text AI requests<input id="setText" class="field" type="number" min="1" required></label><label class="label">Free daily image AI requests<input id="setImage" class="field" type="number" min="0" required></label><div class="row" style="align-items:end"><button class="btn primary" type="submit">Save settings</button></div></form></div>
- <div class="card pad mt"><h3>Grant Pro manually</h3><p class="hint">Use only for a verified offline payment or support correction. Every grant is audited.</p><form id="grantForm" class="row"><input id="grantUser" class="field" placeholder="Exact Supabase user UUID" required><button class="btn" type="submit">Grant 1 month</button></form></div>
+ <div class="card pad mt"><h3>Plan settings</h3><form id="adminSettingsForm" class="grid2"><label class="label">Pro monthly price (NGN)<input id="setPrice" disabled class="field" type="number" min="100" required></label><label class="label">Free daily text AI requests<input id="setText" class="field" type="number" min="1" required></label><label class="label">Free daily image AI requests<input id="setImage" class="field" type="number" min="0" required></label><div class="row" style="align-items:end"><button class="btn primary" type="submit">Save settings</button></div></form></div>
+ <div class="card pad mt"><h3>Grant Pro manually</h3><p class="hint">Use only for a verified offline payment or support correction. Every grant is audited.</p><form id="grantForm" class="row"><input id="grantUser" class="field" placeholder="Student’s exact Knexa ID" aria-label="Student’s exact Knexa ID" autocomplete="off" autocapitalize="characters" spellcheck="false" required><button class="btn" type="submit">Grant 1 month</button></form></div>
  <div id="adminMsg" aria-live="polite"></div>
 </dialog>
 
@@ -337,7 +407,7 @@ dialog.cam::backdrop{background:rgba(5,12,25,.68);backdrop-filter:blur(5px)}
 <script nonce="__NONCE__">
 (()=>{'use strict';
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
-const API_BASE=(document.querySelector('meta[name=kingmath-api]')?.content||'').replace(/\/$/,'');
+const API_BASE=(window.KNEXA_API_BASE||document.querySelector('meta[name=knexa-api]')?.content||'').trim().replace(/\/$/,'');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const ic=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
@@ -354,7 +424,7 @@ async function api(url,o={}){
   const access=sessionStorage.getItem('km_access_token');if(access)opt.headers.Authorization='Bearer '+access;
   if(o.body instanceof FormData)opt.body=o.body;
   else if(o.body!==undefined){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(o.body)}
-  let r;try{r=await fetch(API_BASE+url,opt)}catch{throw new ApiError('Unable to reach KingMath-AI. Check your connection and try again.',0)}
+  let r;try{r=await fetch(API_BASE+url,opt)}catch{throw new ApiError('Unable to reach Knexa AI. Check your connection and try again.',0)}
   if(r.status===401&&!url.startsWith('/api/auth/')&&sessionStorage.getItem('km_refresh_token')){
     try{const rr=await fetch(API_BASE+'/api/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:sessionStorage.getItem('km_refresh_token')})});const rd=await rr.json();if(rr.ok&&rd.access_token){sessionStorage.setItem('km_access_token',rd.access_token);if(rd.refresh_token)sessionStorage.setItem('km_refresh_token',rd.refresh_token);opt.headers.Authorization='Bearer '+rd.access_token;r=await fetch(API_BASE+url,opt)}}catch{}
   }
@@ -469,7 +539,7 @@ tg('#gMath',T.m);tg('#gPhys',T.p);tg('#gChem',T.c);
 async function genTopic(){const topic=$('#customTopic').value.trim();if(!topic){$('#customTopic').focus();return}
   const out=$('#topicResult');busyBox(out,'Generating a fresh question...');
   try{const r=await api('/api/topic-question',{method:'POST',body:{topic,difficulty:$('#topicDiff').value}});S.topicQ=r;
-    out.innerHTML=`<div class="card pad mt"><p class="eyebrow">${esc(r.difficulty)} practice</p><h3>${esc(r.topic)}</h3><p class="pre bigq">${esc(r.question)}</p>${r.hint?`<details class="notice"><summary>Need a hint?</summary><p class="pre">${esc(r.hint)}</p></details>`:''}<div class="actions"><button class="btn primary" data-act="topic-solve">Solve with KingMath-AI</button><button class="btn" data-act="topic-exam">Take a CBT on this topic</button></div></div>`;
+    out.innerHTML=`<div class="card pad mt"><p class="eyebrow">${esc(r.difficulty)} practice</p><h3>${esc(r.topic)}</h3><p class="pre bigq">${esc(r.question)}</p>${r.hint?`<details class="notice"><summary>Need a hint?</summary><p class="pre">${esc(r.hint)}</p></details>`:''}<div class="actions"><button class="btn primary" data-act="topic-solve">Solve with Knexa AI</button><button class="btn" data-act="topic-exam">Take a CBT on this topic</button></div></div>`;
     out.scrollIntoView({behavior:'smooth',block:'nearest'})}
   catch(e){notice(out,e.message)}}
 
@@ -611,38 +681,114 @@ addEventListener('beforeunload',e=>{if(!$('#examActive').hidden){e.preventDefaul
 route();resume();
 
 
-/* ---- secure account, Pro checkout and private admin ---- */
+/* ---- Knexa account, Pro checkout and owner-only admin ---- */
 let authMode='login',accountData=null;
 function accountMsg(m,err=false){$('#accountMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt">${esc(m)}</div>`:''}
 function adminMsg(m,err=false){$('#adminMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt">${esc(m)}</div>`:''}
-function authModeSet(mode){authMode=mode;$('#authSubmit').textContent=mode==='login'?'Sign in':'Create account';$('#showLogin').classList.toggle('primary',mode==='login');$('#showSignup').classList.toggle('primary',mode==='signup')}
-async function refreshAccount(){
- if(!sessionStorage.getItem('km_access_token')){accountData=null;$('#authForms').hidden=false;$('#signedPanel').hidden=true;$('#accountStatus').textContent='Sign in or create an account to use KingMath-AI.';$('#adminNav').hidden=true;return}
- try{accountData=await api('/api/me');$('#authForms').hidden=true;$('#signedPanel').hidden=false;$('#accountStatus').textContent='Your account is active.';$('#accountEmail').textContent=accountData.email;$('#planLabel').textContent=accountData.plan==='pro'?'Pro access is active until '+(accountData.subscription?.expires_at||'expiry date'):'Free plan · Daily limits apply';$('#planBadge').textContent=accountData.plan.toUpperCase();$('#accountIds').textContent='Account ID: '+accountData.user_id+(accountData.subscription?' · Subscription ID: '+accountData.subscription.id:'');loadPaymentHistory();$('#priceLabel').textContent='₦'+Number(accountData.price_ngn).toLocaleString('en-NG')+' / month';$('#adminNav').hidden=!accountData.is_admin;$('#accountAdminBtn').hidden=!accountData.is_admin;
- if(accountData.plan==='pro'){$('#paystackBtn').disabled=true;$('#paystackBtn').textContent='Pro is active';$('#opayForm').hidden=true}else{$('#paystackBtn').disabled=false;$('#paystackBtn').textContent='Pay securely with Paystack';$('#opayForm').hidden=false;loadOpay()}
- }catch(e){sessionStorage.removeItem('km_access_token');sessionStorage.removeItem('km_refresh_token');accountData=null;$('#authForms').hidden=false;$('#signedPanel').hidden=true;$('#accountStatus').textContent=e.message;$('#adminNav').hidden=true}
+function authModeSet(mode){
+ authMode=mode;
+ $('#authSubmit').textContent=mode==='login'?'Sign in':'Create my Knexa ID';
+ $('#showLogin').classList.toggle('primary',mode==='login');
+ $('#showSignup').classList.toggle('primary',mode==='signup');
+ $('#loginFields').hidden=mode==='signup';
+ $('#createFields').hidden=mode!=='signup';
+ $('#showRecovery').hidden=mode==='signup';
+ $('#authKnexaId').required=mode==='login';
+ $('#authAccessCode').required=mode==='login';
 }
-async function loadPaymentHistory(){try{const rows=await api('/api/payments/history');$('#paymentHistory').innerHTML=rows.length?`<div style="overflow:auto"><table><thead><tr><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.reference)}</td><td>₦${(Number(x.amount_kobo)/100).toLocaleString('en-NG')}</td><td>${esc(x.status)}</td><td>${esc(new Date(x.created_at).toLocaleDateString())}</td></tr>`).join('')}</tbody></table></div>`:'No payments yet.'}catch(e){$('#paymentHistory').textContent=e.message}}
-async function loadOpay(){try{const d=await api('/api/payments/opay/instructions');$('#opayInfo').innerHTML=`<p><b>${esc(d.bank_name)}</b><br>Account name: <b>${esc(d.account_name||'Not configured')}</b><br>Account number: <b>${esc(d.account_number||'Not configured')}</b><br>Amount: <b>₦${Number(d.amount_ngn).toLocaleString('en-NG')}</b></p><p>${esc(d.instructions||'')}</p>`}catch(e){$('#opayInfo').textContent=e.message}}
+function showCredentials(d){
+ const html=`<div class="notice success mt"><h3>Your Knexa account is ready</h3><p><b>Knexa ID</b><br><code>${esc(d.knexa_id)}</code></p><p><b>Access code</b><br><code>${esc(d.access_code)}</code></p><p><b>Private recovery code</b><br><code>${esc(d.recovery_code)}</code></p><p><b>Important:</b> Save all three details in a private password manager or secure offline location. The recovery code is shown only once. Knexa cannot retrieve it for you.</p><button class="btn mt" id="copyKnexaCredentials" type="button">Copy credentials</button></div>`;
+ accountMsg('');$('#accountMsg').innerHTML=html;
+ $('#copyKnexaCredentials').addEventListener('click',()=>GenCopyCredentials(d));
+}
+function GenCopyCredentials(d){
+ const value=`Knexa ID: ${d.knexa_id}\nAccess code: ${d.access_code}\nPrivate recovery code: ${d.recovery_code}`;
+ if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>toast('Credentials copied. Store them securely.')).catch(()=>toast('Copy unavailable; write these details down securely.'));
+ else toast('Please copy these details manually.');
+}
+async function refreshAccount(){
+ if(!sessionStorage.getItem('km_access_token')){
+  accountData=null;$('#authForms').hidden=false;$('#signedPanel').hidden=true;
+  $('#accountStatus').textContent='Create a Knexa ID automatically or sign in with your existing Knexa ID.';
+  $('#adminNav').hidden=true;return;
+ }
+ try{
+  accountData=await api('/api/me');$('#authForms').hidden=true;$('#signedPanel').hidden=false;
+  $('#accountStatus').textContent='Your Knexa account is active.';
+  $('#accountEmail').textContent=accountData.knexa_id;
+  $('#planLabel').textContent=accountData.plan==='pro'?'Pro access is active until '+(accountData.subscription?.expires_at||'expiry date')+(accountData.expiry_notice?' · '+accountData.expiry_notice:''):'Free plan · Daily limits apply';
+  $('#planBadge').textContent=accountData.plan.toUpperCase();
+  $('#accountIds').textContent='Knexa ID: '+accountData.knexa_id+(accountData.subscription?' · Subscription ID: '+accountData.subscription.id:'');
+  loadPaymentHistory();$('#priceLabel').textContent='₦3,500 / 30 days';
+  $('#adminNav').hidden=!accountData.is_admin;$('#accountAdminBtn').hidden=!accountData.is_admin;
+  if(accountData.plan==='pro'){$('#paystackBtn').disabled=true;$('#paystackBtn').textContent='Pro is active'}else{$('#paystackBtn').disabled=false;$('#paystackBtn').textContent='Pay ₦3,500 securely with Paystack'}
+ }catch(e){
+  sessionStorage.removeItem('km_access_token');accountData=null;$('#authForms').hidden=false;$('#signedPanel').hidden=true;
+  $('#accountStatus').textContent=e.message;$('#adminNav').hidden=true;
+ }
+}
+async function loadPaymentHistory(){
+ try{const rows=await api('/api/payments/history');$('#paymentHistory').innerHTML=rows.length?`<div style="overflow:auto"><table><thead><tr><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.reference)}</td><td>₦${(Number(x.amount_kobo)/100).toLocaleString('en-NG')}</td><td>${esc(x.status)}</td><td>${esc(new Date((x.created_at||0)*1000).toLocaleDateString())}</td></tr>`).join('')}</tbody></table></div>`:'No payments yet.'}
+ catch(e){$('#paymentHistory').textContent=e.message}
+}
 async function openAccount(){if(!$('#accountDlg').open)$('#accountDlg').showModal();accountMsg('');await refreshAccount()}
-$('#showLogin').addEventListener('click',()=>authModeSet('login'));$('#showSignup').addEventListener('click',()=>authModeSet('signup'));
-$('#authForm').addEventListener('submit',async e=>{e.preventDefault();accountMsg('');const payload={email:$('#authEmail').value.trim(),password:$('#authPassword').value};try{const d=await api(authMode==='login'?'/api/auth/login':'/api/auth/signup',{method:'POST',body:payload});if(authMode==='signup'){accountMsg(d.message);return}if(!d.access_token)throw Error('Sign-in did not return a session.');sessionStorage.setItem('km_access_token',d.access_token);if(d.refresh_token)sessionStorage.setItem('km_refresh_token',d.refresh_token);await refreshAccount();accountMsg('Welcome back. Your account is ready.')}catch(e){accountMsg(e.message,true)}});
+$('#showLogin').addEventListener('click',()=>authModeSet('login'));
+$('#showSignup').addEventListener('click',()=>authModeSet('signup'));
+$('#authForm').addEventListener('submit',async e=>{
+ e.preventDefault();accountMsg('');
+ try{
+  if(authMode==='signup'){
+   const d=await api('/api/auth/create',{method:'POST',body:{}});
+   sessionStorage.setItem('km_access_token',d.access_token);
+   await refreshAccount();showCredentials(d);
+  }else{
+   const d=await api('/api/auth/login',{method:'POST',body:{knexa_id:$('#authKnexaId').value.trim(),access_code:$('#authAccessCode').value}});
+   sessionStorage.setItem('km_access_token',d.access_token);await refreshAccount();accountMsg('Welcome back. Your Knexa account is ready.');
+  }
+ }catch(e){accountMsg(e.message,true)}
+});
+$('#showRecovery').addEventListener('click',()=>{$('#authForm').hidden=true;$('#recoveryForm').hidden=false;accountMsg('')});
+$('#cancelRecovery').addEventListener('click',()=>{$('#recoveryForm').hidden=true;$('#authForm').hidden=false});
+$('#recoveryForm').addEventListener('submit',async e=>{
+ e.preventDefault();
+ try{
+  const d=await api('/api/auth/recover',{method:'POST',body:{knexa_id:$('#recoverId').value.trim(),recovery_code:$('#recoverCode').value,new_access_code:$('#recoverNewCode').value}});
+  accountMsg('Access code reset. Your new private recovery code: '+d.new_recovery_code+' — save it securely.');e.target.reset();$('#recoveryForm').hidden=true;$('#authForm').hidden=false;
+ }catch(err){accountMsg(err.message,true)}
+});
 $('#accountAdminBtn').addEventListener('click',()=>{if($('#accountDlg').open)$('#accountDlg').close();openAdmin()});
-$('#signOutBtn').addEventListener('click',()=>{sessionStorage.removeItem('km_access_token');sessionStorage.removeItem('km_refresh_token');refreshAccount();accountMsg('You have signed out.')});
-$('#paystackBtn').addEventListener('click',async()=>{try{const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{}});location.href=d.authorization_url}catch(e){accountMsg(e.message,true)}});
-$('#opayForm').addEventListener('submit',async e=>{e.preventDefault();try{const d=await api('/api/payments/opay/submit',{method:'POST',body:{payer_name:$('#opayName').value,transfer_reference:$('#opayRef').value,note:$('#opayNote').value}});accountMsg(d.message+' Reference: '+d.reference);e.target.reset()}catch(e){accountMsg(e.message,true)}});
+$('#signOutBtn').addEventListener('click',()=>{sessionStorage.removeItem('km_access_token');refreshAccount();accountMsg('You have signed out.')});
+$('#paystackBtn').addEventListener('click',async()=>{
+ try{const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{email:$('#paystackEmail').value.trim()}});location.href=d.authorization_url}
+ catch(e){accountMsg(e.message,true)}
+});
 async function openAdmin(){if(!accountData?.is_admin){adminMsg('Access denied.',true);return}$('#adminDlg').showModal();await refreshAdmin()}
-async function refreshAdmin(){try{const [o,p,s,users]=await Promise.all([api('/api/admin/overview'),api('/api/admin/payments'),api('/api/admin/settings'),api('/api/admin/users')]);$('#adminStats').innerHTML=`<div class="card pad"><div class="hint">USERS</div><h2>${o.users_count}</h2></div><div class="card pad"><div class="hint">ACTIVE PRO</div><h2>${o.active_pro_count}</h2></div><div class="card pad"><div class="hint">PENDING OPay</div><h2>${o.pending_payments}</h2></div>`;$('#adminPayments').innerHTML=p.length?`<table><thead><tr><th>Reference / user</th><th>Amount</th><th>Channel / status</th><th>Review</th></tr></thead><tbody>${p.map(x=>`<tr><td><b>${esc(x.reference)}</b><br><small>${esc(x.user_id)}</small><br><small>${esc(x.payer_name||'')}</small></td><td>₦${(Number(x.amount_kobo||0)/100).toLocaleString('en-NG')}</td><td>${esc(x.channel)}<br>${esc(x.status)}</td><td>${x.channel==='opay_manual'&&x.status==='pending_review'?`<button class="btn sm primary" data-review="approve" data-id="${esc(x.id)}">Approve</button><button class="btn sm" data-review="reject" data-id="${esc(x.id)}">Reject</button>`:'—'}</td></tr>`).join('')}</tbody></table>`:'<p class="hint">No payment records yet.</p>';$('#setPrice').value=s.pro_price_ngn;$('#setText').value=s.free_ai_text_daily;$('#setImage').value=s.free_ai_image_daily;renderAdminUsers(users)}catch(e){adminMsg(e.message,true)}}
+async function refreshAdmin(){try{const [o,p,s,users]=await Promise.all([api('/api/admin/overview'),api('/api/admin/payments'),api('/api/admin/settings'),api('/api/admin/users')]);$('#adminStats').innerHTML=`<div class="card pad"><div class="hint">USERS</div><h2>${o.users_count}</h2></div><div class="card pad"><div class="hint">ACTIVE PRO</div><h2>${o.active_pro_count}</h2></div><div class="card pad"><div class="hint">PENDING PAYMENTS</div><h2>${o.pending_payments}</h2></div>`;$('#adminPayments').innerHTML=p.length?`<table><thead><tr><th>Reference / user</th><th>Amount</th><th>Channel / status</th><th>Verification</th></tr></thead><tbody>${p.map(x=>`<tr><td><b>${esc(x.reference)}</b><br><small>${esc(x.user_id)}</small><br><small>${esc(x.payer_name||'')}</small></td><td>₦${(Number(x.amount_kobo||0)/100).toLocaleString('en-NG')}</td><td>${esc(x.channel)}<br>${esc(x.status)}</td><td>Verified automatically by Paystack</td></tr>`).join('')}</tbody></table>`:'<p class="hint">No payment records yet.</p>';$('#setPrice').value=s.pro_price_ngn;$('#setText').value=s.free_ai_text_daily;$('#setImage').value=s.free_ai_image_daily;renderAdminUsers(users)}catch(e){adminMsg(e.message,true)}}
 $('#refreshAdmin').addEventListener('click',refreshAdmin);
-function renderAdminUsers(users){$('#adminUsers').innerHTML=users.length?`<div style="overflow:auto"><table><thead><tr><th>Email / UUID</th><th>Plan</th><th>Expiry</th><th>Action</th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.email)}</b><br><small>${esc(u.id)}</small></td><td>${esc(u.subscription?.status||'free')}</td><td>${esc(u.subscription?.expires_at||'—')}</td><td><button class="btn sm" data-grant-user="${esc(u.id)}">Grant 1 month</button><button class="btn sm" data-revoke-user="${esc(u.id)}">Revoke Pro</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="hint">No users found.</p>'}
+function renderAdminUsers(users){$('#adminUsers').innerHTML=users.length?`<div style="overflow:auto"><table><thead><tr><th>Knexa ID</th><th>Plan</th><th>Expiry</th><th>Action</th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.knexa_id||u.id)}</b></td><td>${esc(u.subscription?.status||'free')}</td><td>${esc(u.subscription?.expires_at||'—')}</td><td><button class="btn sm" data-grant-user="${esc(u.knexa_id||u.id)}">Grant 1 month</button><button class="btn sm" data-revoke-user="${esc(u.knexa_id||u.id)}">Revoke Pro</button></td></tr>`).join('')}</tbody></table></div>`:'<p class="hint">No users found.</p>'}
 $('#refreshUsers').addEventListener('click',async()=>{try{renderAdminUsers(await api('/api/admin/users'))}catch(e){adminMsg(e.message,true)}});
 $('#adminUsers').addEventListener('click',async e=>{const grant=e.target.closest('[data-grant-user]');const revoke=e.target.closest('[data-revoke-user]');if(!grant&&!revoke)return;const uid=(grant||revoke).dataset[grant?'grantUser':'revokeUser'];if(!confirm(grant?'Grant this account one month of Pro?':'Immediately revoke this account’s active Pro access?'))return;try{await api(grant?'/api/admin/subscription/grant':'/api/admin/subscription/revoke',{method:'POST',body:{user_id:uid}});adminMsg(grant?'Pro access granted.':'Pro access revoked.');await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
 $('#adminPayments').addEventListener('click',async e=>{const b=e.target.closest('[data-review]');if(!b)return;let note='Verified transfer';if(b.dataset.review==='reject'){const entered=prompt('Reason for rejection (optional):');if(entered===null)return;note=entered;}try{await api('/api/admin/payment-decision',{method:'POST',body:{payment_id:b.dataset.id,decision:b.dataset.review,note}});adminMsg('Payment decision saved.');await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
 $('#adminSettingsForm').addEventListener('submit',async e=>{e.preventDefault();try{await api('/api/admin/settings',{method:'PUT',body:{pro_price_ngn:Number($('#setPrice').value),free_ai_text_daily:Number($('#setText').value),free_ai_image_daily:Number($('#setImage').value)}});adminMsg('Plan settings saved.');await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
 $('#grantForm').addEventListener('submit',async e=>{e.preventDefault();if(!confirm('Grant this account one month of Pro access?'))return;try{await api('/api/admin/subscription/grant',{method:'POST',body:{user_id:$('#grantUser').value.trim()}});adminMsg('Pro access granted for one month.');e.target.reset();await refreshAdmin()}catch(e){adminMsg(e.message,true)}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;if(a==='account-open')openAccount();if(a==='account-close')$('#accountDlg').close();if(a==='admin-open')openAdmin();if(a==='admin-close')$('#adminDlg').close()});
-// Paystack redirects back with a reference. This browser callback only asks the backend to verify.
-(async()=>{const u=new URL(location.href);if(u.searchParams.get('payment')==='paystack'){const ref=u.searchParams.get('reference');if(ref&&sessionStorage.getItem('km_access_token')){try{await api('/api/payments/paystack/verify?reference='+encodeURIComponent(ref));toast('Payment verified. Pro is now active.')}catch(e){toast(e.message)} }u.searchParams.delete('payment');u.searchParams.delete('reference');history.replaceState({},'',u.pathname+u.hash)}await refreshAccount()})();
+(async()=>{
+ const u=new URL(location.href);
+ if(u.searchParams.get('payment')==='paystack'){
+  const ref=u.searchParams.get('reference');
+  if(ref&&sessionStorage.getItem('km_access_token')){
+   try{const d=await api('/api/payments/paystack/verify?reference='+encodeURIComponent(ref));toast(d.duplicate?'Payment was already processed.':'Payment verified. Knexa Pro is now active.')}
+   catch(e){toast(e.message)}
+  }
+  u.searchParams.delete('payment');u.searchParams.delete('reference');history.replaceState({},'',u.pathname+u.hash);
+ }
+ await refreshAccount();
+ if(location.pathname==='/admin'){
+  if(!sessionStorage.getItem('km_access_token')){openAccount();accountMsg('Sign in with the owner Knexa ID to access the private dashboard.',true)}
+  else if(accountData?.is_admin){openAdmin()}
+  else{toast('This dashboard is restricted to the Knexa owner.');openAccount()}
+ }
+})();
 
 })();;
 </script>
