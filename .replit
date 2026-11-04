@@ -1,15 +1,5 @@
-entrypoint = "main.py"
-run = "python -m uvicorn main:app --host 0.0.0.0 --port 8000"
-
-[nix]
-channel = "stable-24_05"
-packages = ["python39", "python39Packages.pip"]
+modules = ["python-3.11"]
 
 [[ports]]
 localPort = 8000
 externalPort = 80
-
-[deployment]
-deploymentTarget = "cloudrun"
-run = "python -m uvicorn main:app --host 0.0.0.0 --port 8000"
-

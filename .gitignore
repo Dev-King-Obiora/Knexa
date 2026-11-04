@@ -5,5 +5,4 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
-.replit_cache/
 .DS_Store
