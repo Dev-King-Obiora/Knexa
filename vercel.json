@@ -10,6 +10,10 @@
       "source": "/(.*)",
       "headers": [
         {
+          "key": "Content-Security-Policy",
+          "value": "connect-src 'self' https://knexa-backend.onrender.com"
+        },
+        {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
         },
