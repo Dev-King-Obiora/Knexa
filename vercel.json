@@ -1,3 +1,4 @@
+
 {
   "rewrites": [
     {
@@ -10,10 +11,6 @@
       "source": "/(.*)",
       "headers": [
         {
-          "key": "Content-Security-Policy",
-          "value": "connect-src 'self' https://knexa-backend.onrender.com"
-        },
-        {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
         },
@@ -24,6 +21,10 @@
         {
           "key": "X-Frame-Options",
           "value": "DENY"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "connect-src 'self' https://knexa-backend.onrender.com"
         }
       ]
     }
