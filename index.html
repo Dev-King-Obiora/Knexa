@@ -553,7 +553,7 @@ dialog.cam{border-radius:16px;border-color:var(--line);box-shadow:0 24px 80px rg
 (()=>{'use strict';
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const API_BASE=(window.KNEXA_API_BASE||document.querySelector('meta[name=knexa-api]')?.content||'').trim().replace(/\/$/,'');
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;n'}[c]||c));
 const ic=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
 const S={image:null,imgUrl:null,busy:false,solution:null,question:'',exam:null,examId:null,idx:0,answers:{},review:new Set(),deadline:0,timer:null,submitting:false,examBusy:false,results:null,filter:'all',topicQ:null,dur:20};
@@ -651,7 +651,25 @@ async function solve(){
   catch(e){$('#solArea').innerHTML=`<div class="empty"><div class="big">!</div><h3>We couldn't finish that</h3><span>${esc(e.message)}</span><button class="btn primary mt" data-act="solve">Try again</button></div>`}
   finally{setBusy(false)}}
 const sec=(l,b)=>`<div class="sec"><div class="lbl2 mb">${l}</div>${b}</div>`;
-function renderMath(root){if(!root||typeof renderMathInElement!=='function')return;try{renderMathInElement(root,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,strict:'ignore',trust:false})}catch(e){console.warn('Math rendering skipped',e)}}
+
+/* ---- FIXED: Added support for $ and $$ delimiters alongside \(...\) and \[...\] ---- */
+function renderMath(root){
+  if(!root||typeof renderMathInElement!=='function')return;
+  try{
+    renderMathInElement(root,{
+      delimiters:[
+        {left:'\\[',right:'\\]',display:true},
+        {left:'\\(',right:'\\)',display:false},
+        {left:'$$',right:'$$',display:true},
+        {left:'$',right:'$',display:false}
+      ],
+      throwOnError:false,
+      strict:'ignore',
+      trust:false
+    });
+  }catch(e){console.warn('Math rendering skipped',e)}
+}
+
 function renderSolution(s){
   let h=`<div class="sol"><h3>${esc(s.title)}</h3>`;
   if(s.understanding)h+=sec('Understanding the question',`<p class="pre">${esc(s.understanding)}</p>`);
