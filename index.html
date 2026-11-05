@@ -127,8 +127,7 @@ textarea{min-height:150px;resize:vertical;line-height:1.6}
 .step:first-child{border-top:0;padding-top:4px}
 .step-num{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-weight:800;font-size:14px;box-shadow:0 0 0 5px var(--gold-soft)}
 .step-title{font-family:var(--serif);font-size:21px;font-weight:600;margin:5px 0 10px;letter-spacing:-.01em}
-.step-body{min-width:0}
-.eqcard{background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:8px 20px;margin:10px 0 14px;overflow-x:auto;text-align:center}
+.eqcard{background:var(--surface2);border:1px solid var(--line);border-radius:16px;padding:10px 16px;margin:10px 0 14px;overflow:hidden;text-align:center}
 .eqcard p{margin:.35em 0}
 .answer{position:relative;margin-top:30px;border-radius:20px;padding:22px 24px;background:linear-gradient(135deg,var(--gold-soft),var(--surface) 85%);border:1.5px solid var(--gold);box-shadow:0 18px 36px -24px var(--gold)}
 .answer-tag{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
@@ -138,8 +137,8 @@ textarea{min-height:150px;resize:vertical;line-height:1.6}
 .verify p{margin:0 0 .5em}.verify p:last-child{margin:0}
 
 /* Math typography */
-.katex{font-size:1.1em;color:inherit}
-.katex-display{margin:.85em 0;overflow-x:auto;overflow-y:hidden;padding:4px 0}
+.katex{font-size:1.08em;color:inherit;overflow-wrap:anywhere}
+.katex-display{margin:.85em 0;overflow:visible;padding:4px 0;text-align:center}
 .prose .katex,.theorem .katex,.answer .katex{font-size:1.12em}
 .chead{padding:0 0 14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
 
@@ -187,7 +186,7 @@ textarea{min-height:150px;resize:vertical;line-height:1.6}
 [data-theme=dark] .opt.sel{border-color:var(--gold)}
 .opt.sel .l{background:var(--accent);color:#fff;border-color:var(--accent)}
 [data-theme=dark] .opt.sel .l{background:var(--gold);color:#09101c;border-color:var(--gold)}
-.opt .t{overflow-wrap:anywhere;padding-top:3px;min-width:0}
+.opt .t .katex{font-size:1.08em}
 .flag{display:flex;gap:9px;align-items:center;font-size:14px;margin-top:14px;cursor:pointer}
 .flag input{width:18px;height:18px}
 .numgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:12px 0}
@@ -293,6 +292,8 @@ dialog::backdrop{background:rgba(6,12,22,.62);backdrop-filter:blur(4px)}
   .qtext{font-size:18px}
   #toast{bottom:104px}
   .plan-card{padding:16px}
+    .katex{font-size:1em}
+  .katex-display{font-size:.95em}
 }
 @media(max-width:420px){
   .page{padding-left:13px;padding-right:13px}
@@ -649,7 +650,30 @@ const S={image:null,imgUrl:null,busy:false,solution:null,question:'',exam:null,e
 
 /* Math: $…$, $$…$$, \(…\) and \[…\] are all rendered by KaTeX. */
 const MATH={delimiters:[{left:'$$',right:'$$',display:true},{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false,strict:'ignore',trust:false,ignoredTags:['script','noscript','style','textarea','code']};
-function math(el){if(el&&window.renderMathInElement){try{renderMathInElement(el,MATH)}catch(e){console.warn('Math render skipped',e)}}}
+/* Wrap bare LaTeX (e.g. \frac{4}{3}, x^{2}) in $...$ so KaTeX can render it. */
+const autoMath=s=>{const t=String(s??'');if(/\$|\\\(|\\\[/.test(t)||!/[\\^_{}]/.test(t))return t;return '$'+t+'$'};
+
+/* Shrink any display equation that would overflow its box, so nothing scrolls sideways. */
+function fitMath(root){
+  if(!root)return;
+  root.querySelectorAll('.katex-display').forEach(el=>{
+    el.style.zoom='';
+    const box=el.parentElement;if(!box)return;
+    const cs=getComputedStyle(box);
+    const avail=box.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-4;
+    const need=el.scrollWidth;
+    if(avail>0&&need>avail)el.style.zoom=(avail/need).toFixed(3);
+  });
+}
+let fitTimer;
+addEventListener('resize',()=>{clearTimeout(fitTimer);fitTimer=setTimeout(()=>fitMath(document),150)});
+
+function math(el){
+  if(el&&window.renderMathInElement){
+    try{renderMathInElement(el,MATH)}catch(e){console.warn('Math render skipped',e)}
+    fitMath(el);
+  }
+}
 /* Escaped text → paragraphs and line breaks. Maths is left intact for KaTeX. */
 const rich=t=>String(t??'').split(/\n\s*\n/).map(p=>p.trim()).filter(Boolean).map(p=>`<p>${esc(p).replace(/\n/g,'<br>')}</p>`).join('');
 
@@ -909,7 +933,7 @@ function renderQ(){
   $('#qPos').textContent=`Question ${S.idx+1} of ${n}`;
   $('#qTopic').textContent=q.topic||'';
   $('#qText').innerHTML=rich(q.question);math($('#qText'));
-  $('#qOpts').innerHTML='ABCD'.split('').map(k=>`<button class="opt${S.answers[S.idx]===k?' sel':''}" data-act="opt" data-k="${k}" aria-pressed="${S.answers[S.idx]===k}"><span class="l">${k}</span><span class="t">${esc(q.options[k])}</span></button>`).join('');
+  $('#qOpts').innerHTML='ABCD'.split('').map(k=>`<button class="opt${S.answers[S.idx]===k?' sel':''}" data-act="opt" data-k="${k}" aria-pressed="${S.answers[S.idx]===k}"><span class="l">${k}</span><span class="t">${rich(autoMath(q.options[k]))}</span></button>`).join('');
   math($('#qOpts'));
   $('#flagBox').checked=S.review.has(S.idx);
   $('[data-act=prev]').disabled=S.idx===0;
