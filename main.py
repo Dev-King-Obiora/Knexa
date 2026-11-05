@@ -51,7 +51,6 @@ AI_PER_MIN = _int("AI_PER_MINUTE", 10)         # AI calls per IP and per session
 AI_PER_DAY = _int("AI_PER_DAY", 150)           # AI calls per IP per day
 EXAM_PER_HOUR = _int("EXAMS_PER_HOUR", 5)      # exam generations per IP per hour
 AI_CONCURRENCY = _int("AI_CONCURRENCY", 6)     # simultaneous upstream AI calls
-MAX_EXAMS = _int("MAX_EXAMS", 400)
 EXAM_TTL = _int("EXAM_TTL_SECONDS", 4 * 3600)
 MAX_IMAGE = 7 * 1024 * 1024
 MAX_JSON_BODY = 64 * 1024
@@ -62,7 +61,6 @@ PITFALLS = ["Sign Errors", "Formula Misapplication", "Algebraic Manipulation", "
             "Scientific Principle Misunderstanding"]
 COOKIE = "knexa_sid"
 
-EXAMS: dict[str, dict[str, Any]] = {}
 CLIENT: Optional[httpx.AsyncClient] = None
 SEM: Optional[asyncio.Semaphore] = None
 INDEX_HTML = ""
@@ -124,7 +122,8 @@ def ai_gate(request: Request, heavy: bool = False) -> None:
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     global CLIENT, SEM, INDEX_HTML
-    INDEX_HTML = (BASE / "index.html").read_text(encoding="utf-8")
+    frontend_file = BASE / "index.html"
+    INDEX_HTML = frontend_file.read_text(encoding="utf-8") if frontend_file.is_file() else ""
     CLIENT = httpx.AsyncClient(timeout=httpx.Timeout(75, connect=10), limits=httpx.Limits(max_connections=50))
     SEM = asyncio.Semaphore(AI_CONCURRENCY)
     yield
@@ -138,7 +137,7 @@ if _hosts != ["*"]:
 
 _cors_origins = [x.strip().rstrip("/") for x in os.getenv("FRONTEND_ORIGIN", os.getenv("APP_ORIGIN", "")).split(",") if x.strip()]
 if _cors_origins:
-    app.add_middleware(CORSMiddleware, allow_origins=_cors_origins, allow_credentials=False,
+    app.add_middleware(CORSMiddleware, allow_origins=_cors_origins, allow_credentials=True,
                        allow_methods=["GET", "POST", "PUT", "OPTIONS"],
                        allow_headers=["Authorization", "Content-Type", "X-Session-ID"])
 
@@ -190,7 +189,11 @@ async def guard(request: Request, call_next):
         resp = await call_next(request)
 
     if fresh:
-        resp.set_cookie(COOKIE, fresh, max_age=7 * 86400, httponly=True, samesite="lax", secure=_is_https(request))
+        resp.set_cookie(COOKIE, fresh, max_age=7 * 86400, httponly=True, samesite="none" if _cors_origins else "lax", secure=True if _cors_origins else _is_https(request))
+        if _cors_origins:
+            cookie_headers = resp.headers.getlist("set-cookie")
+            if cookie_headers:
+                resp.headers["set-cookie"] = cookie_headers[-1] + "; Partitioned"
     h = resp.headers
     h["Content-Security-Policy"] = (
         f"default-src 'none'; script-src 'nonce-{nonce}'; style-src 'nonce-{nonce}'; "
@@ -242,11 +245,12 @@ class ExamGenerateRequest(BaseModel):
     topic: str = Field(min_length=1, max_length=300)
     difficulty: str = Field(default="Intermediate", pattern="^(Beginner|Intermediate|Advanced)$")
     duration_minutes: int = Field(ge=1, le=180)
+    question_count: int = Field(default=20, ge=5, le=50)
     level: str = Field(default="Secondary school", max_length=80)
 
 
 class AnswerRequest(BaseModel):
-    question_index: int = Field(ge=0, le=19)
+    question_index: int = Field(ge=0, le=49)
     answer: Optional[str] = Field(default=None, pattern="^[A-D]$")
     review: bool = False
 
@@ -338,7 +342,7 @@ SYSTEM = (
     "for anything unrelated say so politely in final_answer. "
     'Return only valid JSON matching: {"title":string,"understanding":string,"principle":string,'
     '"steps":[{"title":string,"working":string,"explanation":string}],"final_answer":string,"verification":string,"notes":string}. '
-    "FORMATTING: write maths as plain text the way a textbook prints it. NEVER use LaTeX, backslashes, $ signs or braces. Use x², x³, √(x), a/b, ×, ÷, ±, ≤, ≥, π, θ, °. Do not number step titles. Put one equation per line in working. If asked who you are, final_answer should be: I am Knexa AI, "
+    "FORMATTING: use KaTeX-compatible LaTeX for all mathematical expressions. Use \\( ... \\) for inline maths and \\[ ... \\] for display equations. Put important transformations on separate display-equation lines and explain why each transformation is valid. Do not include raw HTML. Do not number step titles. If asked who you are, final_answer should be: I am Knexa AI, "
     "your personal AI mathematics and science tutor. I help you understand concepts, solve problems step by step, practise "
     "different topics, and improve your problem-solving skills."
 )
@@ -416,16 +420,22 @@ def extract_json(raw: str) -> dict[str, Any]:
     return obj
 
 
+def clean_math_text(value: Any, limit: int) -> str:
+    value = str(value or "")
+    value = re.sub(r"[\x00-\x08\x0b-\x1f\x7f]", " ", value)
+    return value[:limit].strip()
+
+
 def clean_solution(obj: dict[str, Any]) -> dict[str, Any]:
     steps = obj.get("steps", [])
     steps = steps if isinstance(steps, list) else []
     norm = []
     for i, s in enumerate(steps[:16]):
         if isinstance(s, dict):
-            title = re.sub(r"^\s*(step\s*)?\d+\s*[\.\):\-]\s*", "", delatex(s.get("title", f"Step {i + 1}")), flags=re.I)
-            norm.append({"title": clean_text(title, 180) or f"Step {i + 1}", "working": delatex(s.get("working", ""))[:2000],
-                         "explanation": delatex(s.get("explanation", ""))[:2000]})
-    d = lambda k, n, dflt="": delatex(obj.get(k, dflt))[:n]
+            title = re.sub(r"^\s*(step\s*)?\d+\s*[\.\):\-]\s*", "", clean_math_text(s.get("title", f"Step {i + 1}"), 180), flags=re.I)
+            norm.append({"title": clean_text(title, 180) or f"Step {i + 1}", "working": clean_math_text(s.get("working", ""), 2000),
+                         "explanation": clean_math_text(s.get("explanation", ""), 2000)})
+    d = lambda k, n, dflt="": clean_math_text(obj.get(k, dflt), n)
     return {"title": clean_text(d("title", 180, "Worked solution"), 180), "understanding": d("understanding", 2500),
             "principle": d("principle", 1500), "steps": norm, "final_answer": d("final_answer", 2500, "Please retry this question."),
             "verification": d("verification", 2000), "notes": str(obj.get("notes", ""))[:1500]}
@@ -434,6 +444,9 @@ def clean_solution(obj: dict[str, Any]) -> dict[str, Any]:
 # ----------------------------------------------------------------------------- pages
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
+    if not INDEX_HTML:
+        return JSONResponse({"detail": "API is running. The frontend is hosted separately."}, status_code=404,
+                            headers={"Cache-Control": "no-store"})
     return HTMLResponse(INDEX_HTML.replace("__NONCE__", request.state.nonce), headers={"Cache-Control": "no-store"})
 
 
@@ -530,7 +543,7 @@ _REFERS = re.compile(r"\b(all|none|both|neither|any)\b.*\b(above|these|options)\
 
 def validate_exam(obj: dict[str, Any], req: ExamGenerateRequest) -> dict[str, Any]:
     qs = obj.get("questions")
-    if not isinstance(qs, list) or len(qs) != 20:
+    if not isinstance(qs, list) or len(qs) != req.question_count:
         raise ValueError("count")
     out, seen = [], set()
     rng = secrets.SystemRandom()
@@ -540,13 +553,13 @@ def validate_exam(obj: dict[str, Any], req: ExamGenerateRequest) -> dict[str, An
         opts = q.get("options")
         if not isinstance(opts, dict):
             raise ValueError("options")
-        vals = [delatex(_LETTER_PREFIX.sub("", str(opts.get(k, "")))).strip() for k in "ABCD"]
+        vals = [clean_math_text(_LETTER_PREFIX.sub("", str(opts.get(k, ""))), 1000) for k in "ABCD"]
         if any(not v for v in vals) or len({v.casefold() for v in vals}) < 4:
             raise ValueError("options")
         key = str(q.get("correct_answer", "")).strip().upper()
         if len(key) != 1 or key not in "ABCD":
             raise ValueError("key")
-        text = delatex(q["question"]).strip()
+        text = clean_math_text(q["question"], 2500)
         if text.casefold() in seen:
             raise ValueError("duplicate")
         seen.add(text.casefold())
@@ -556,18 +569,33 @@ def validate_exam(obj: dict[str, Any], req: ExamGenerateRequest) -> dict[str, An
             rng.shuffle(order)
             vals, ki = [vals[i] for i in order], order.index(ki)
         pit = str(q.get("pitfall", ""))
-        out.append({"question": text[:2500], "options": {k: vals[i][:1000] for i, k in enumerate("ABCD")}, "correct_answer": "ABCD"[ki],
-                    "explanation": delatex(q.get("explanation", "Explanation unavailable."))[:2500],
+        out.append({"question": clean_math_text(q["question"], 2500), "options": {k: vals[i] for i, k in enumerate("ABCD")}, "correct_answer": "ABCD"[ki],
+                    "explanation": clean_math_text(q.get("explanation", "Explanation unavailable."), 2500),
                     "topic": clean_text(q.get("topic", req.topic), 120) or clean_text(req.topic, 120),
                     "difficulty": clean_text(q.get("difficulty", req.difficulty), 30), "pitfall": pit if pit in PITFALLS else ""})
     return {"title": clean_text(obj.get("title", req.topic + " Practice Exam"), 200),
             "subject": clean_text(obj.get("subject", req.topic), 200), "questions": out}
 
 
-def purge_exams() -> None:
-    now = time.time()
-    for k in [k for k, v in EXAMS.items() if now - v["created_at"] > EXAM_TTL]:
-        EXAMS.pop(k, None)
+def _exam_storage_key(exam_id: str) -> str:
+    return f"knexa:exam:{exam_id}"
+
+
+async def save_exam(ex: dict[str, Any]) -> None:
+    stored = dict(ex)
+    stored["review"] = sorted(ex.get("review", set()))
+    await _rset(_exam_storage_key(ex["id"]), stored, ex=EXAM_TTL)
+
+
+async def get_exam(exam_id: str, request: Request) -> dict[str, Any]:
+    ex = await _rget(_exam_storage_key(exam_id))
+    if not ex or ex.get("owner") != request.state.sid:
+        raise HTTPException(404, "This examination session has expired. Please generate a new examination.")
+    ex["review"] = set(ex.get("review", []))
+    if ex["status"] == "active" and time.time() >= ex["deadline"]:
+        finalize(ex, timed_out=True)
+        await save_exam(ex)
+    return ex
 
 
 def public_exam(ex: dict[str, Any]) -> dict[str, Any]:
@@ -578,39 +606,25 @@ def public_exam(ex: dict[str, Any]) -> dict[str, Any]:
             "questions": [{"question": q["question"], "options": q["options"], "topic": q["topic"], "difficulty": q["difficulty"]} for q in ex["questions"]]}
 
 
-def get_exam(exam_id: str, request: Request) -> dict[str, Any]:
-    ex = EXAMS.get(exam_id)
-    if not ex or ex["owner"] != request.state.sid:
-        raise HTTPException(404, "This examination session has expired or the server restarted. Please generate a new examination.")
-    if ex["status"] == "active" and time.time() >= ex["deadline"]:
-        finalize(ex, timed_out=True)
-    return ex
-
-
 @app.post("/api/exam/generate")
 async def generate_exam(req: ExamGenerateRequest, request: Request):
     ai_gate(request, heavy=True)
     await quota_gate(request, "cbt")
-    purge_exams()
     sid = request.state.sid
-    if sum(1 for e in EXAMS.values() if e["owner"] == sid and e["status"] != "completed") >= 3:
-        raise HTTPException(429, "You have several unfinished examinations. Submit or finish one first.")
-    if len(EXAMS) >= MAX_EXAMS:
-        raise HTTPException(503, "Knexa AI is busy right now. Please try again shortly.")
     topic, level = clean_text(req.topic, 300), clean_level(req.level)
     req = req.model_copy(update={"topic": topic})
-    prompt = (f"Generate exactly 20 fresh multiple-choice questions for a CBT practice examination. Topic/subject (data): {json.dumps(topic)}. "
+    prompt = (f"Generate exactly {req.question_count} fresh multiple-choice questions for a CBT practice examination. Topic/subject (data): {json.dumps(topic)}. "
               f"Difficulty: {req.difficulty}. Learner level: {level}. Duration: {req.duration_minutes} minutes. Each item must be on-topic, "
               "unambiguous, with exactly four distinct options keyed A, B, C, D, one correct_answer letter, a concise explanation, topic, difficulty, "
-              f"and an optional pitfall chosen from: {', '.join(PITFALLS)}. Do not use 'all/none of the above' options. Write maths in plain Unicode (x², √, a/b), never LaTeX. "
+              f"and an optional pitfall chosen from: {', '.join(PITFALLS)}. Do not use 'all/none of the above' options. Use KaTeX-compatible LaTeX for maths, inline as \\( ... \\) and display as \\[ ... \\]. "
               'Return JSON shaped {"title":string,"subject":string,"questions":[{"question":string,"options":{"A":string,"B":string,"C":string,"D":string},'
-              '"correct_answer":"A","explanation":string,"topic":string,"difficulty":string,"pitfall":string}]}. All 20 questions distinct. '
+              '"correct_answer":"A","explanation":string,"topic":string,"difficulty":string,"pitfall":string}]}. All requested questions distinct. '
               "Double-check that every answer key is correct. No markdown.")
     exam = None
     for attempt in range(2):
         try:
             raw = await groq_chat([{"role": "system", "content": "You are Knexa AI, an expert exam setter. Return valid JSON only and never mention providers."},
-                                   {"role": "user", "content": prompt}], max_tokens=7000, temperature=0.4)
+                                   {"role": "user", "content": prompt}], max_tokens=min(12000, max(5000, req.question_count * 450)), temperature=0.3)
             exam = validate_exam(extract_json(raw), req)
             break
         except HTTPException as e:
@@ -619,40 +633,45 @@ async def generate_exam(req: ExamGenerateRequest, request: Request):
         except Exception as e:
             log.warning("Exam validation attempt %s failed: %s", attempt + 1, type(e).__name__)
     if not exam:
-        raise HTTPException(502, "Knexa AI could not generate a valid 20-question examination. Please retry with a more specific topic.")
+        raise HTTPException(502, "Knexa AI could not generate the requested number of valid questions. Please retry with a more specific topic.")
     eid = uuid.uuid4().hex
-    EXAMS[eid] = {"id": eid, "owner": sid, "title": exam["title"], "subject": exam["subject"], "topic": topic, "difficulty": req.difficulty,
-                  "duration": req.duration_minutes * 60, "questions": exam["questions"], "answers": {}, "review": set(),
-                  "started_at": None, "deadline": None, "status": "ready", "created_at": time.time(), "result": None, "analysis": None}
-    return public_exam(EXAMS[eid])
+    created = {"id": eid, "owner": sid, "title": exam["title"], "subject": exam["subject"], "topic": topic, "difficulty": req.difficulty,
+               "duration": req.duration_minutes * 60, "questions": exam["questions"], "answers": {}, "review": set(),
+               "started_at": None, "deadline": None, "status": "ready", "created_at": time.time(), "result": None, "analysis": None}
+    await save_exam(created)
+    return public_exam(created)
 
 
 @app.post("/api/exam/{exam_id}/start")
 async def start_exam(exam_id: str, request: Request, _: Empty = Empty()):
-    ex = get_exam(exam_id, request)
+    ex = await get_exam(exam_id, request)
     if ex["status"] != "ready":
         raise HTTPException(409, "This examination has already started or finished.")
     ex["started_at"] = time.time()
     ex["deadline"] = ex["started_at"] + ex["duration"]
     ex["status"] = "active"
+    await save_exam(ex)
     return public_exam(ex)
 
 
 @app.get("/api/exam/{exam_id}")
 async def exam_state(exam_id: str, request: Request):
-    return public_exam(get_exam(exam_id, request))
+    return public_exam(await get_exam(exam_id, request))
 
 
 @app.post("/api/exam/{exam_id}/answer")
 async def save_answer(exam_id: str, req: AnswerRequest, request: Request):
-    ex = get_exam(exam_id, request)
+    ex = await get_exam(exam_id, request)
     if ex["status"] != "active":
         raise HTTPException(409, "This examination is no longer accepting answers.")
+    if req.question_index >= len(ex["questions"]):
+        raise HTTPException(422, "That question number is outside this examination.")
     if req.answer is None:
         ex["answers"].pop(str(req.question_index), None)
     else:
         ex["answers"][str(req.question_index)] = req.answer
     (ex["review"].add if req.review else ex["review"].discard)(req.question_index)
+    await save_exam(ex)
     return {"saved": True, "answered_count": len(ex["answers"]), "remaining_seconds": max(0, int(ex["deadline"] - time.time()))}
 
 
@@ -698,9 +717,10 @@ def finalize(ex: dict[str, Any], timed_out: bool = False) -> dict[str, Any]:
     inc = [r for r in rows if r["status"] == "incorrect"]
     una = [r for r in rows if r["status"] == "unanswered"]
     elapsed = ex["duration"] if timed_out else min(ex["duration"], max(0, int(time.time() - (ex["started_at"] or time.time()))))
-    pct = round(len(cor) / 20 * 100)
+    total_questions = len(rows)
+    pct = round(len(cor) / total_questions * 100) if total_questions else 0
     ex["status"] = "completed"
-    ex["result"] = {"exam_id": ex["id"], "title": ex["title"], "subject": ex["subject"], "topic": ex["topic"], "score": len(cor), "total": 20,
+    ex["result"] = {"exam_id": ex["id"], "title": ex["title"], "subject": ex["subject"], "topic": ex["topic"], "score": len(cor), "total": total_questions,
                     "percentage": pct, "correct_count": len(cor), "incorrect_count": len(inc), "unanswered_count": len(una),
                     "flagged_count": sum(r["flagged"] for r in rows), "time_used_seconds": elapsed, "duration_seconds": ex["duration"],
                     "timed_out": timed_out, "by_topic": by_topic, "evaluation": evaluate(pct, by_topic, len(una)),
@@ -711,17 +731,19 @@ def finalize(ex: dict[str, Any], timed_out: bool = False) -> dict[str, Any]:
 
 @app.post("/api/exam/{exam_id}/submit")
 async def submit_exam(exam_id: str, request: Request, _: Empty = Empty()):
-    ex = get_exam(exam_id, request)
+    ex = await get_exam(exam_id, request)
     if ex["status"] == "completed":
         return ex["result"]
     if ex["status"] != "active":
         raise HTTPException(409, "Start the examination before submitting it.")
-    return finalize(ex, timed_out=time.time() >= ex["deadline"])      # marks immediately, no waiting for the clock
+    result = finalize(ex, timed_out=time.time() >= ex["deadline"])      # marks immediately, no waiting for the clock
+    await save_exam(ex)
+    return result
 
 
 @app.get("/api/exam/{exam_id}/results")
 async def exam_results(exam_id: str, request: Request):
-    ex = get_exam(exam_id, request)
+    ex = await get_exam(exam_id, request)
     if ex["status"] != "completed":
         raise HTTPException(409, "Submit the examination before viewing results.")
     return ex["result"]
@@ -729,7 +751,7 @@ async def exam_results(exam_id: str, request: Request):
 
 @app.post("/api/exam/{exam_id}/analyse")
 async def analyse_exam(exam_id: str, request: Request, _: Empty = Empty()):
-    ex = get_exam(exam_id, request)
+    ex = await get_exam(exam_id, request)
     await quota_gate(request, "ai_text")
     if ex["status"] != "completed":
         raise HTTPException(409, "Complete the examination before analysing answers.")
@@ -760,6 +782,7 @@ async def analyse_exam(exam_id: str, request: Request, _: Empty = Empty()):
                              "correct_reasoning": str(i.get("correct_reasoning", ""))[:800], "advice": str(i.get("advice", ""))[:600],
                              "confidence": "strong" if i.get("confidence") == "strong" else "possible"})
     ex["analysis"] = {"summary": str(obj.get("summary", "Review the explanations for the missed questions."))[:1000], "insights": insights}
+    await save_exam(ex)
     return ex["analysis"]
 
 

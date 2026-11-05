@@ -6,6 +6,9 @@
 <meta name="knexa-api" content="https://knexa-backend.onrender.com">
 <meta name="theme-color" content="#f5f6fb">
 <meta name="referrer" content="no-referrer">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 <title>Knexa AI - Learn with clarity</title>
 <script nonce="__NONCE__">try{var t=localStorage.getItem('km_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
 <style nonce="__NONCE__">
@@ -447,7 +450,8 @@ dialog.cam{border-radius:16px;border-color:var(--line);box-shadow:0 24px 80px rg
           <button class="chip" data-act="subj" data-t="University Calculus: Differentiation">Calculus</button><button class="chip" data-act="subj" data-t="Organic chemistry">Organic chemistry</button></div>
         <label class="label mt" for="examTopic">Or describe it</label>
         <textarea id="examTopic" rows="2" maxlength="300" placeholder="e.g. SS3 Mathematics: Quadratic equations"></textarea></div>
-      <div class="block"><h3>2. Time and difficulty</h3>
+      <div class="block"><h3>2. Number of questions, time and difficulty</h3>
+        <div class="row wrap mt"><div><label class="label" for="examCount">Number of questions</label><input id="examCount" class="field" type="number" min="5" max="50" step="1" value="20" inputmode="numeric" aria-describedby="examCountHelp"><small id="examCountHelp" class="hint">Choose any number from 5 to 50.</small></div></div>
         <div class="choices" id="durChoices"><button class="choice" data-act="dur" data-min="10">10 min</button><button class="choice" data-act="dur" data-min="15">15 min</button><button class="choice on" data-act="dur" data-min="20">20 min</button><button class="choice" data-act="dur" data-min="30">30 min</button><button class="choice" data-act="dur" data-min="45">45 min</button><button class="choice" data-act="dur" data-min="60">60 min</button></div>
         <div class="row wrap mt"><div><label class="label" for="customDur">Custom (1-180 min)</label><input id="customDur" class="field" type="number" min="1" max="180" inputmode="numeric" placeholder="minutes"></div>
         <div><label class="label" for="examDiff">Difficulty</label><select id="examDiff"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select></div></div>
@@ -561,13 +565,13 @@ function busyBox(el,msg){el.innerHTML=`<div class="loading"><span class="spin"><
 /* ---- API ---- */
 class ApiError extends Error{constructor(m,s){super(m);this.status=s}}
 async function api(url,o={}){
-  const opt={method:o.method||'GET',headers:{}};
+  const opt={method:o.method||'GET',headers:{},credentials:'include'};
   const access=sessionStorage.getItem('km_access_token');if(access)opt.headers.Authorization='Bearer '+access;
   if(o.body instanceof FormData)opt.body=o.body;
   else if(o.body!==undefined){opt.headers['Content-Type']='application/json';opt.body=JSON.stringify(o.body)}
   let r;try{r=await fetch(API_BASE+url,opt)}catch{throw new ApiError('Unable to reach Knexa AI. Check your connection and try again.',0)}
   if(r.status===401&&!url.startsWith('/api/auth/')&&sessionStorage.getItem('km_refresh_token')){
-    try{const rr=await fetch(API_BASE+'/api/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({refresh_token:sessionStorage.getItem('km_refresh_token')})});const rd=await rr.json();if(rr.ok&&rd.access_token){sessionStorage.setItem('km_access_token',rd.access_token);if(rd.refresh_token)sessionStorage.setItem('km_refresh_token',rd.refresh_token);opt.headers.Authorization='Bearer '+rd.access_token;r=await fetch(API_BASE+url,opt)}}catch{}
+    try{const rr=await fetch(API_BASE+'/api/auth/refresh',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',body:JSON.stringify({refresh_token:sessionStorage.getItem('km_refresh_token')})});const rd=await rr.json();if(rr.ok&&rd.access_token){sessionStorage.setItem('km_access_token',rd.access_token);if(rd.refresh_token)sessionStorage.setItem('km_refresh_token',rd.refresh_token);opt.headers.Authorization='Bearer '+rd.access_token;r=await fetch(API_BASE+url,opt)}}catch{}
   }
   let d={};try{d=await r.json()}catch{}
   if(!r.ok)throw new ApiError(typeof d.detail==='string'?d.detail:'The request could not be completed. Please try again.',r.status);
@@ -647,6 +651,7 @@ async function solve(){
   catch(e){$('#solArea').innerHTML=`<div class="empty"><div class="big">!</div><h3>We couldn't finish that</h3><span>${esc(e.message)}</span><button class="btn primary mt" data-act="solve">Try again</button></div>`}
   finally{setBusy(false)}}
 const sec=(l,b)=>`<div class="sec"><div class="lbl2 mb">${l}</div>${b}</div>`;
+function renderMath(root){if(!root||typeof renderMathInElement!=='function')return;try{renderMathInElement(root,{delimiters:[{left:'\\[',right:'\\]',display:true},{left:'\\(',right:'\\)',display:false}],throwOnError:false,strict:'ignore',trust:false})}catch(e){console.warn('Math rendering skipped',e)}}
 function renderSolution(s){
   let h=`<div class="sol"><h3>${esc(s.title)}</h3>`;
   if(s.understanding)h+=sec('Understanding the question',`<p class="pre">${esc(s.understanding)}</p>`);
@@ -657,7 +662,7 @@ function renderSolution(s){
   if(s.verification)h+=sec('Verification',`<p class="pre">${esc(s.verification)}</p>`);
   if(s.notes&&s.notes!=='similar_question')h+=`<div class="notice pre">${esc(s.notes)}</div>`;
   h+=`<div class="actions"><button class="btn sm" data-act="action" data-a="clearer">Explain more clearly</button><button class="btn sm" data-act="action" data-a="simpler">Explain simply</button><button class="btn sm" data-act="action" data-a="verify">Verify answer</button><button class="btn sm soft" data-act="action" data-a="similar">Similar question</button></div><div id="actFb"></div></div>`;
-  $('#solArea').innerHTML=h}
+  $('#solArea').innerHTML=h;renderMath($('#solArea'))}
 async function runAction(a){
   if(!S.solution||S.busy)return;setBusy(true);const fb=$('#actFb');
   busyBox(fb,{clearer:'Making it clearer...',simpler:'Rewriting in simpler words...',similar:'Creating a similar question...',verify:'Independently checking the answer...'}[a]);
@@ -686,15 +691,16 @@ async function genTopic(){const topic=$('#customTopic').value.trim();if(!topic){
 
 /* ---- CBT setup ---- */
 function curDur(){const c=Number($('#customDur').value);return Number.isInteger(c)&&c>=1&&c<=180?c:S.dur}
-function sumUpdate(){$('#examSum').textContent=`20 questions · ${curDur()} minutes · ${$('#examDiff').value}`}
-$('#customDur').addEventListener('input',()=>{if($('#customDur').value)$$('#durChoices .choice').forEach(x=>x.classList.remove('on'));sumUpdate()});
-$('#examDiff').addEventListener('change',sumUpdate);sumUpdate();
+function sumUpdate(){$('#examSum').textContent=`${$('#examCount').value||0} questions · ${curDur()} minutes · ${$('#examDiff').value}`}
+$('#examCount').addEventListener('input',sumUpdate);$('#customDur').addEventListener('input',()=>{if($('#customDur').value)$$('#durChoices .choice').forEach(x=>x.classList.remove('on'));sumUpdate()});
+$('#examDiff').addEventListener('change',sumUpdate);$('#examCount').addEventListener('change',sumUpdate);sumUpdate();
 
 async function startExam(){
   if(S.examBusy)return;const topic=$('#examTopic').value.trim();
   if(!topic){notice($('#examErr'),'Choose a subject or describe what you want to practise.');return}
-  const mins=curDur();S.examBusy=true;$('#startBtn').disabled=true;busyBox($('#examErr'),'Building and checking your 20 questions. The timer has not started...');
-  try{const ex=await api('/api/exam/generate',{method:'POST',body:{topic,difficulty:$('#examDiff').value,duration_minutes:mins,level:$('#level').value}});
+  const count=Number($('#examCount').value);if(!Number.isInteger(count)||count<5||count>50){notice($('#examErr'),'Choose between 5 and 50 questions.');return}
+  const mins=curDur();S.examBusy=true;$('#startBtn').disabled=true;busyBox($('#examErr'),`Building and checking your ${$('#examCount').value} questions. The timer has not started...`);
+  try{const ex=await api('/api/exam/generate',{method:'POST',body:{topic,difficulty:$('#examDiff').value,duration_minutes:mins,question_count:count,level:$('#level').value}});
     const st=await api(`/api/exam/${ex.exam_id}/start`,{method:'POST',body:{}});notice($('#examErr'),'');loadExam(st)}
   catch(e){notice($('#examErr'),e.message)}finally{S.examBusy=false;$('#startBtn').disabled=false}}
 
@@ -704,8 +710,8 @@ function loadExam(st){S.exam=st;S.examId=st.exam_id;S.answers=st.answers||{};S.r
   $('#exTitle').textContent=st.title;$('#exMeta').textContent=st.subject+' · '+st.difficulty;showPanel('examActive');renderQ();startTimer()}
 
 function renderQ(){const q=S.exam.questions[S.idx],n=S.exam.questions.length;
-  $('#qPos').textContent=`QUESTION ${S.idx+1} OF ${n}`;$('#qTopic').textContent=q.topic||'';$('#qText').textContent=q.question;
-  $('#qOpts').innerHTML='ABCD'.split('').map(k=>`<button class="opt${S.answers[S.idx]===k?' sel':''}" data-act="opt" data-k="${k}" aria-pressed="${S.answers[S.idx]===k}"><span class="l">${k}</span><span class="t">${esc(q.options[k])}</span></button>`).join('');
+  $('#qPos').textContent=`QUESTION ${S.idx+1} OF ${n}`;$('#qTopic').textContent=q.topic||'';$('#qText').innerHTML=esc(q.question);renderMath($('#qText'));
+  $('#qOpts').innerHTML='ABCD'.split('').map(k=>`<button class="opt${S.answers[S.idx]===k?' sel':''}" data-act="opt" data-k="${k}" aria-pressed="${S.answers[S.idx]===k}"><span class="l">${k}</span><span class="t">${esc(q.options[k])}</span></button>`).join('');renderMath($('#qOpts'));
   $('#flagBox').checked=S.review.has(S.idx);$('[data-act=prev]').disabled=S.idx===0;$('[data-act=next]').disabled=S.idx===n-1;updNav()}
 function updNav(){const n=S.exam.questions.length,a=Object.keys(S.answers).length;
   const html=S.exam.questions.map((_,i)=>`<button class="qn${S.answers[i]!==undefined?' ans':''}${S.review.has(i)?' flg':''}${i===S.idx?' cur':''}" data-act="goq" data-q="${i}" aria-label="Question ${i+1}">${i+1}</button>`).join('');
@@ -761,7 +767,7 @@ function renderReview(){const r=S.results,rows=r.review.all;
   $('#rlist').innerHTML=list.length?list.map(x=>`<article class="ritem ${x.status}"><div class="row between wrap"><span class="hint"><b>Q${x.index+1}</b> · ${esc(x.topic)}</span><span class="row"><span class="badge ${x.status}">${x.status==='correct'?'✓ Correct':x.status==='incorrect'?'✗ Incorrect':'— Unanswered'}</span>${x.flagged?`<span class="badge flagged">${ic('flag')}Flagged</span>`:''}</span></div>
    <p class="pre qq">${esc(x.question)}</p>
    ${'ABCD'.split('').map(k=>`<div class="ropt${k===x.correct_answer?' good':k===x.selected?' bad':''}"><b>${k}.</b> ${esc(x.options[k])}${k===x.correct_answer?' ✓ Correct answer':''}${k===x.selected&&k!==x.correct_answer?' ✗ Your answer':''}${k===x.selected&&k===x.correct_answer?' (your answer)':''}</div>`).join('')}
-   <div class="expl"><b>Explanation:</b> ${esc(x.explanation)}</div></article>`).join(''):'<div class="notice">Nothing to show in this filter.</div>'}
+   <div class="expl"><b>Explanation:</b> ${esc(x.explanation)}</div></article>`).join(''):'<div class="notice">Nothing to show in this filter.</div>';renderMath($('#rlist'))}
 async function analyse(){const a=$('#analysis');busyBox(a,'Looking for patterns in your mistakes...');
   try{const r=await api(`/api/exam/${S.examId}/analyse`,{method:'POST',body:{}});
     a.innerHTML=`<div class="card pad mt"><h3>Common pitfalls</h3><p>${esc(r.summary)}</p>${(r.insights||[]).map(i=>`<div class="ritem"><span class="badge flagged">${esc(i.badge)}</span> <b>Q${Number(i.question_number)||'?'} · ${esc(i.confidence)} evidence</b><p>${esc(i.evidence)}</p><p><b>Why it may be wrong:</b> ${esc(i.why_incorrect)}</p><p><b>Correct reasoning:</b> ${esc(i.correct_reasoning)}</p><p><b>Try next time:</b> ${esc(i.advice)}</p></div>`).join('')}</div>`}
