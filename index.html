@@ -4,16 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="knexa-api" content="https://knexa-backend.onrender.com">
-<meta name="theme-color" content="#f4f2ed">
+<meta name="theme-color" content="#f5f3ee">
 <meta name="referrer" content="no-referrer">
+<meta name="description" content="Knexa AI: step-by-step solutions, practice and computer-based exam preparation.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Knexa AI">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Knexa AI · Learn with clarity</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
-<script nonce="__NONCE__">try{var t=localStorage.getItem('km_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem('km_theme')||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 @property --p{syntax:'<number>';inherits:true;initial-value:0}
 
@@ -300,8 +307,18 @@ textarea{min-height:156px;resize:vertical;line-height:1.6}
 .about .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
 .about p{color:var(--muted);font-size:14px;margin:0}
 
-/* ---------- Mobile chrome ---------- */
-.tabbar{display:none}
+/* ---------- Plans (student) ---------- */
+.plan-card{background:linear-gradient(145deg,var(--surface),var(--surface2));border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));border-radius:19px;padding:22px}
+.plans{display:grid;gap:10px;margin-top:14px}
+.plan-opt{display:grid;gap:4px;text-align:left;width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:16px;background:var(--surface);transition:border-color .2s,box-shadow .2s,transform .2s var(--ease)}
+.plan-opt:hover{border-color:var(--gold);transform:translateY(-1px)}
+.plan-opt.on{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 14px 28px -20px var(--accent)}
+[data-theme=dark] .plan-opt.on{border-color:var(--gold)}
+.po-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.po-label{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);background:var(--gold-soft);padding:3px 9px;border-radius:99px;white-space:nowrap}
+.po-price{font-family:var(--serif);font-size:24px;font-weight:600}
+.po-price small{font-family:var(--sans);font-size:12.5px;color:var(--muted);font-weight:600}
+.po-desc{font-size:13px;color:var(--muted)}
 
 /* ---------- Dialogs ---------- */
 dialog{border:0;padding:0;border-radius:24px;background:var(--surface);color:var(--ink);width:min(580px,calc(100% - 24px));max-height:90vh;overflow:auto;box-shadow:var(--shadow-lg)}
@@ -311,15 +328,19 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 .dlg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
 .dactions{display:flex;gap:9px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
 .cam video,.cam img{width:100%;max-height:60vh;border-radius:17px;background:#000;object-fit:contain;display:block}
-.plan-card{background:linear-gradient(145deg,var(--surface),var(--surface2));border:1px solid color-mix(in srgb,var(--gold) 35%,var(--line));border-radius:19px;padding:22px}
-.price{font-family:var(--serif);font-size:32px;font-weight:600;margin:8px 0 0}
-.price span{font-family:var(--sans);font-size:13px;color:var(--muted);font-weight:600}
 .tbl-wrap{overflow-x:auto;margin-top:12px}
 .tbl{width:100%;border-collapse:collapse;font-size:13px}
 .tbl th{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:800;text-align:left}
 .tbl th,.tbl td{padding:11px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
 .tbl tr:last-child td{border-bottom:0}
 .tbl button{margin:2px}
+.pe-row{display:grid;grid-template-columns:150px 1fr 1fr;gap:10px;align-items:end;padding:14px 0;border-bottom:1px solid var(--line)}
+.pe-row:last-child{border-bottom:0}
+.pe-f{display:grid;gap:6px;font-size:12px;font-weight:700;color:var(--muted)}
+.pe-wide{grid-column:span 2}
+.pe-chk{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);padding-bottom:12px}
+.pe-chk input{width:18px;height:18px;accent-color:var(--gold)}
+.pe-id{display:grid;gap:2px}
 #toast{position:fixed;left:50%;bottom:100px;transform:translate(-50%,24px);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);z-index:60;max-width:90vw;box-shadow:var(--shadow-lg)}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -353,11 +374,15 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   .katex{font-size:1em}
   .katex-display{font-size:.95em}
   .opt .t{font-size:17px}
+  .pe-row{grid-template-columns:1fr 1fr}
+  .pe-id,.pe-wide{grid-column:span 2}
   .tabbar{display:grid;grid-template-columns:repeat(4,1fr);position:fixed;left:0;right:0;bottom:0;z-index:25;background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px -18px rgba(0,0,0,.35)}
   .tab{border:0;background:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:8px 2px;border-radius:14px;transition:background .2s,color .2s}
   .tab:active{transform:scale(.96)}
   .tab[aria-current=page]{color:var(--accent);background:var(--accent-soft)}
   [data-theme=dark] .tab[aria-current=page]{color:var(--gold-hi)}
+  .tabbar{display:none}
+  .tabbar[data-show]{display:grid}
   body.in-exam .tabbar{display:none}
   body.in-exam .page{padding-bottom:32px}
   .examfoot{position:sticky;bottom:0;background:var(--bg);padding:12px 0 calc(12px + env(safe-area-inset-bottom));margin-bottom:-16px;z-index:5}
@@ -370,6 +395,8 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   .stats{grid-template-columns:repeat(2,1fr)}
   .tgrid{grid-template-columns:1fr 1fr;gap:10px}
   .tcard{padding:15px}
+  .pe-row{grid-template-columns:1fr}
+  .pe-id,.pe-wide{grid-column:auto}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
@@ -392,6 +419,7 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></symbol>
 <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
 <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
 <symbol id="i-knexa" viewBox="0 0 48 48"><path d="M24 3.8 41.5 13.9v20.2L24 44.2 6.5 34.1V13.9L24 3.8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M17 14.5v19M31 14.5 18.5 24 31 33.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="34.5" cy="13.5" r="2.1" fill="#D7B573"/><circle cx="34.5" cy="34.5" r="2.1" fill="#D7B573"/></symbol>
 </defs></svg>
 
@@ -405,6 +433,7 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   <button class="nav-item" data-act="account-open"><svg class="ic"><use href="#i-user"/></svg>Account and Pro</button>
   <button class="nav-item" data-act="admin-open" id="adminNav" hidden><svg class="ic"><use href="#i-shield"/></svg>Private admin</button>
   <div class="spacer"></div>
+  <button class="nav-item" data-act="install" id="installBtn" hidden><svg class="ic"><use href="#i-download"/></svg>Install app</button>
   <button class="nav-item" data-act="theme" aria-label="Toggle theme"></button>
 </aside>
 
@@ -589,6 +618,18 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 <dialog id="navDlg"><div class="dlg"><h3>Jump to question</h3><p class="hint" id="ansLabel2"></p><div class="numgrid"></div>
   <div class="dactions"><button class="btn primary" data-act="close-dlg">Done</button></div></div></dialog>
 
+<dialog id="installDlg" aria-labelledby="installTitle"><div class="dlg">
+  <div class="dlg-head">
+    <div><p class="eyebrow">Install</p><h2 id="installTitle">Add Knexa AI to your device</h2></div>
+    <button class="btn ghost sm" data-act="close-dlg" aria-label="Close"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <p class="hint mt2">Installed, Knexa AI opens in its own window and works like a native app.</p>
+  <h3 class="mt2">Android (Chrome)</h3><p class="muted">Open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</p>
+  <h3 class="mt2">iPhone and iPad (Safari)</h3><p class="muted">Tap <b>Share</b>, then <b>Add to Home Screen</b>.</p>
+  <h3 class="mt2">Computer (Chrome or Edge)</h3><p class="muted">Use the install icon in the address bar, or choose <b>Install Knexa AI</b> from the menu.</p>
+  <div class="dactions"><button class="btn primary" data-act="close-dlg">Done</button></div>
+</div></dialog>
+
 <dialog id="accountDlg" aria-labelledby="accountTitle">
   <div class="dlg">
     <div class="dlg-head">
@@ -644,12 +685,12 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
       </div>
 
       <div class="plan-card mt" id="proUpgradeCard">
-        <div class="row between"><div><div class="lbl2">Membership</div><h3 style="margin:4px 0 0">Upgrade to Knexa Pro</h3></div><span class="badge plan" data-plan="pro">PRO</span></div>
-        <p class="hint mt2">Higher daily limits for AI solving, practice and exams.</p>
-        <p class="price" id="priceLabel">₦3,500 <span>/ 30 days</span></p>
+        <div class="row between wrap"><div><div class="lbl2">Membership</div><h3 id="upgradeTitle" style="margin:4px 0 0">Choose a Knexa Pro plan</h3></div><span class="badge plan" data-plan="pro">PRO</span></div>
+        <p class="hint mt2">Renewals add time after your current expiry date, so no days are lost.</p>
+        <div id="planList" class="plans"><p class="hint">Loading plans…</p></div>
         <label class="label mt" for="paystackEmail">Email for receipt</label>
         <input class="field" id="paystackEmail" type="email" maxlength="320" placeholder="you@example.com" autocomplete="email">
-        <button class="btn primary block mt" id="paystackBtn" type="button">Continue with Paystack</button>
+        <button class="btn primary block mt" id="paystackBtn" type="button">Continue to secure payment</button>
       </div>
 
       <div class="card pad mt">
@@ -682,12 +723,21 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
     </div>
 
     <div class="card pad mt">
-      <h3>Plan settings</h3>
-      <form id="adminSettingsForm" class="row wrap" style="align-items:flex-end">
-        <div style="flex:1;min-width:160px"><label class="label" for="setPrice">Pro monthly price (NGN)</label><input id="setPrice" class="field" type="number" disabled></div>
-        <div style="flex:1;min-width:160px"><label class="label" for="setText">Free daily text AI requests</label><input id="setText" class="field" type="number" min="0" required></div>
-        <div style="flex:1;min-width:160px"><label class="label" for="setImage">Free daily image AI requests</label><input id="setImage" class="field" type="number" min="0" required></div>
-        <button class="btn primary" type="submit">Save settings</button>
+      <h3>Subscription plans</h3>
+      <p class="hint">Prices, names, labels and descriptions update for students immediately. Durations are fixed by the server.</p>
+      <div id="planEditor"></div>
+      <div class="row mt"><button class="btn primary" id="savePlans" type="button">Save plans</button></div>
+    </div>
+
+    <div class="card pad mt">
+      <h3>Free-user allowances (per day)</h3>
+      <p class="hint">Enforced on the server for every request. Set a value to 0 to disable that feature for free users.</p>
+      <form id="adminSettingsForm" class="row wrap mt" style="align-items:flex-end">
+        <div style="flex:1;min-width:150px"><label class="label" for="setText">AI text solves</label><input id="setText" class="field" type="number" min="0" max="1000" required></div>
+        <div style="flex:1;min-width:150px"><label class="label" for="setImage">AI photo solves</label><input id="setImage" class="field" type="number" min="0" max="100" required></div>
+        <div style="flex:1;min-width:150px"><label class="label" for="setCbt">CBT exams</label><input id="setCbt" class="field" type="number" min="0" max="50" required></div>
+        <div style="flex:1;min-width:150px"><label class="label" for="setPractice">Practice questions</label><input id="setPractice" class="field" type="number" min="0" max="100" required></div>
+        <button class="btn primary" type="submit">Save allowances</button>
       </form>
     </div>
 
@@ -696,7 +746,7 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
       <p class="hint">Use only for a verified offline payment or a support correction. Every grant is audited.</p>
       <form id="grantForm" class="row wrap">
         <input id="grantUser" class="field" placeholder="Student's exact Knexa ID" aria-label="Student's exact Knexa ID" autocomplete="off" autocapitalize="characters" spellcheck="false" required style="flex:1;min-width:200px">
-        <button class="btn" type="submit">Grant 1 month</button>
+        <button class="btn" type="submit">Grant 30 days</button>
       </form>
     </div>
     <div id="adminMsg" aria-live="polite"></div>
@@ -705,7 +755,7 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 
 <div id="toast" role="status" aria-live="polite"></div>
 
-<script nonce="__NONCE__">
+<script>
 (()=>{'use strict';
 
 /* ---------- helpers ---------- */
@@ -716,6 +766,7 @@ const icon=n=>`<svg class="ic" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k,v){try{localStorage.setItem(k,v)}catch{}},del(k){try{localStorage.removeItem(k)}catch{}}};
 const token=()=>{try{return sessionStorage.getItem('km_access_token')}catch{return null}};
 const setToken=v=>{try{v?sessionStorage.setItem('km_access_token',v):sessionStorage.removeItem('km_access_token')}catch{}};
+const money=n=>'₦'+Number(n||0).toLocaleString('en-NG');
 const S={image:null,imgUrl:null,busy:false,solution:null,question:'',exam:null,examId:null,idx:0,answers:{},review:new Set(),deadline:0,timer:null,submitting:false,examBusy:false,results:null,filter:'all',topicQ:null,dur:20,shot:null,shotUrl:null};
 
 /* ---------- maths ----------
@@ -762,7 +813,7 @@ async function api(url,o={}){
   if(o.body instanceof FormData)body=o.body;
   else if(o.body!==undefined){headers['Content-Type']='application/json';body=JSON.stringify(o.body)}
   let r;
-  try{r=await fetch(API_BASE+url,{method:o.method||'GET',headers,body,credentials:'include'})}
+  try{r=await fetch(API_BASE+url,{method:o.method||'GET',headers,body,credentials:'include',cache:'no-store'})}
   catch{throw new ApiError('Unable to reach Knexa AI. Check your connection and try again.',0)}
   let d={};try{d=await r.json()}catch{}
   if(!r.ok){
@@ -1166,6 +1217,23 @@ async function resume(){
   }catch{store.del('km_exam')}
 }
 
+/* ---------- install ---------- */
+let deferredInstall=null;
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+function installUI(){$('#installBtn').hidden=isStandalone()}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e});
+addEventListener('appinstalled',()=>{deferredInstall=null;$('#installBtn').hidden=true;toast('Knexa AI is installed.')});
+async function installApp(){
+  if(deferredInstall){
+    deferredInstall.prompt();
+    const choice=await deferredInstall.userChoice;
+    deferredInstall=null;
+    if(choice.outcome==='accepted')toast('Installing Knexa AI…');
+    return;
+  }
+  $('#installDlg').showModal();
+}
+
 /* ---------- global events ---------- */
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]');
@@ -1175,6 +1243,7 @@ document.addEventListener('click',e=>{
   const a=b.dataset.act;
   switch(a){
     case 'theme':setTheme(document.documentElement.dataset.theme==='dark'?'light':'dark');break;
+    case 'install':installApp();break;
     case 'solve':solve();break;
     case 'clear':if((($('#question').value.trim())||S.solution||S.image)&&!confirm('Clear the question and solution?'))break;resetSolver();break;
     case 'sample':$('#question').value=b.dataset.q;$('#charCount').textContent=b.dataset.q.length+' / 6000';$('#question').focus();break;
@@ -1227,8 +1296,8 @@ document.addEventListener('keydown',e=>{
 });
 addEventListener('beforeunload',e=>{if(!$('#examActive').hidden&&!S.results){e.preventDefault();e.returnValue=''}});
 
-/* ---------- account, Pro checkout and owner admin ---------- */
-let authMode='login',accountData=null;
+/* ---------- account, plans and checkout ---------- */
+let authMode='login',accountData=null,plans=[],selectedPlan='monthly';
 function accountMsg(m,err=false){$('#accountMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt">${esc(m)}</div>`:''}
 function adminMsg(m,err=false){$('#adminMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt">${esc(m)}</div>`:''}
 function authModeSet(mode){
@@ -1257,6 +1326,31 @@ function copyCredentials(d){
   if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>toast('Credentials copied. Store them securely.')).catch(()=>toast('Copy unavailable. Write these details down securely.'));
   else toast('Please copy these details manually.');
 }
+
+/* Plans: the server is the only source of prices. The page only displays what it returns. */
+const periodText=d=>{d=Number(d);if(d>=365)return 'year';if(d>=30){const m=Math.round(d/30);return m===1?'month':m+' months'}return d+' days'};
+function renderPlans(){
+  $('#planList').innerHTML=plans.map(p=>`<button type="button" class="plan-opt${p.id===selectedPlan?' on':''}" data-plan="${esc(p.id)}" aria-pressed="${p.id===selectedPlan}">
+    <span class="po-top"><b>${esc(p.name)}</b>${p.label?`<span class="po-label">${esc(p.label)}</span>`:''}</span>
+    <span class="po-price">${money(p.price_ngn)}<small> / ${periodText(p.duration_days)}</small></span>
+    <span class="po-desc">${esc(p.description)}</span></button>`).join('')||'<p class="hint">No plans are available right now.</p>';
+}
+async function loadPlans(){
+  try{
+    plans=await api('/api/plans',{quiet:true});
+    if(!plans.find(p=>p.id===selectedPlan))selectedPlan=plans[0]?.id||'';
+    renderPlans();
+  }catch(e){$('#planList').innerHTML=`<p class="hint">${esc(e.message)}</p>`}
+}
+$('#planList').addEventListener('click',e=>{const b=e.target.closest('[data-plan]');if(!b)return;selectedPlan=b.dataset.plan;renderPlans()});
+$('#paystackBtn').addEventListener('click',async()=>{
+  if(!selectedPlan){accountMsg('No plan is available right now.',true);return}
+  try{
+    const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{plan_id:selectedPlan,email:$('#paystackEmail').value.trim()}});
+    location.href=d.authorization_url;
+  }catch(e){accountMsg(e.message,true)}
+});
+
 async function refreshAccount(){
   if(!token()){
     accountData=null;
@@ -1274,7 +1368,8 @@ async function refreshAccount(){
     $('#planBadge').dataset.plan=accountData.plan;
     $('#accountIds').textContent='Knexa ID: '+accountData.knexa_id+(accountData.subscription?' · Subscription: '+accountData.subscription.id:'');
     const isPro=accountData.plan==='pro';
-    $('#proStatusCard').hidden=!isPro;$('#proUpgradeCard').hidden=isPro;
+    $('#proStatusCard').hidden=!isPro;
+    $('#upgradeTitle').textContent=isPro?'Extend your Knexa Pro access':'Choose a Knexa Pro plan';
     if(isPro){
       const expiry=accountData.subscription?.expires_at;
       $('#proExpiryDate').textContent=expiry?new Date(expiry).toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'}):'Active';
@@ -1291,12 +1386,12 @@ async function refreshAccount(){
 async function loadPaymentHistory(){
   try{
     const rows=await api('/api/payments/history');
-    $('#paymentHistory').innerHTML=rows.length?`<table class="tbl"><thead><tr><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.reference)}</td><td>₦${(Number(x.amount_kobo)/100).toLocaleString('en-NG')}</td><td>${esc(x.status)}</td><td>${esc(new Date((x.created_at||0)*1000).toLocaleDateString())}</td></tr>`).join('')}</tbody></table>`:'No payments yet.';
+    $('#paymentHistory').innerHTML=rows.length?`<table class="tbl"><thead><tr><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.reference)}</td><td>${money(Number(x.amount_kobo)/100)}</td><td>${esc(x.status)}</td><td>${esc(new Date((x.created_at||0)*1000).toLocaleDateString())}</td></tr>`).join('')}</tbody></table>`:'No payments yet.';
   }catch(e){$('#paymentHistory').textContent=e.message}
 }
 async function openAccount(){
   if(!$('#accountDlg').open)$('#accountDlg').showModal();
-  accountMsg('');await refreshAccount();
+  accountMsg('');loadPlans();await refreshAccount();
 }
 $('#showLogin').addEventListener('click',()=>authModeSet('login'));
 $('#showSignup').addEventListener('click',()=>authModeSet('signup'));
@@ -1325,34 +1420,54 @@ $('#recoveryForm').addEventListener('submit',async e=>{
 });
 $('#accountAdminBtn').addEventListener('click',()=>{$('#accountDlg').close();openAdmin()});
 $('#signOutBtn').addEventListener('click',()=>{setToken(null);refreshAccount();accountMsg('You have signed out.')});
-$('#paystackBtn').addEventListener('click',async()=>{
-  try{
-    const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{email:$('#paystackEmail').value.trim()}});
-    location.href=d.authorization_url;
-  }catch(e){accountMsg(e.message,true)}
-});
 
+/* ---------- owner admin ---------- */
 async function openAdmin(){
   if(!accountData?.is_admin){toast('This dashboard is restricted to the Knexa owner.');return}
   if(!$('#adminDlg').open)$('#adminDlg').showModal();
   await refreshAdmin();
 }
-const PRICE_FMT=n=>Number(n||0).toLocaleString('en-NG');
+function renderPlanEditor(list){
+  $('#planEditor').innerHTML=list.map(p=>`<div class="pe-row" data-id="${esc(p.id)}">
+    <div class="pe-id"><b>${esc(p.id)}</b><span class="hint">${periodText(p.duration_days)}</span></div>
+    <label class="pe-f">Name<input class="field" data-k="name" maxlength="40" value="${esc(p.name)}"></label>
+    <label class="pe-f">Price (₦)<input class="field" data-k="price_ngn" type="number" min="100" step="100" value="${p.price_ngn}"></label>
+    <label class="pe-f">Label<input class="field" data-k="label" maxlength="40" value="${esc(p.label||'')}"></label>
+    <label class="pe-f pe-wide">Description<input class="field" data-k="description" maxlength="240" value="${esc(p.description||'')}"></label>
+    <label class="pe-f pe-chk"><input type="checkbox" data-k="enabled" ${p.enabled?'checked':''}> Enabled for students</label>
+  </div>`).join('');
+}
+$('#savePlans').addEventListener('click',async()=>{
+  const body={plans:$$('.pe-row').map(r=>({
+    id:r.dataset.id,
+    name:r.querySelector('[data-k=name]').value.trim(),
+    price_ngn:Number(r.querySelector('[data-k=price_ngn]').value),
+    label:r.querySelector('[data-k=label]').value.trim(),
+    description:r.querySelector('[data-k=description]').value.trim(),
+    enabled:r.querySelector('[data-k=enabled]').checked
+  }))};
+  try{
+    renderPlanEditor(await api('/api/admin/plans',{method:'PUT',body}));
+    adminMsg('Plans saved. Students see the new prices now.');
+  }catch(e){adminMsg(e.message,true)}
+});
 async function refreshAdmin(){
   try{
-    const [o,p,s,users]=await Promise.all([api('/api/admin/overview'),api('/api/admin/payments'),api('/api/admin/settings'),api('/api/admin/users')]);
+    const [o,p,s,users,list]=await Promise.all([api('/api/admin/overview'),api('/api/admin/payments'),api('/api/admin/settings'),api('/api/admin/users'),api('/api/admin/plans')]);
     $('#adminStats').innerHTML=`
       <div class="stat"><strong>${o.users_count}</strong><span>Users</span></div>
       <div class="stat g"><strong>${o.active_pro_count}</strong><span>Active Pro</span></div>
       <div class="stat w"><strong>${o.pending_payments}</strong><span>Pending payments</span></div>
-      <div class="stat"><strong>₦${PRICE_FMT(s.pro_price_ngn)}</strong><span>Pro price / 30 days</span></div>`;
-    $('#adminPayments').innerHTML=p.length?`<table class="tbl"><thead><tr><th>Reference and user</th><th>Amount</th><th>Status</th><th>Verification</th></tr></thead><tbody>${p.map(x=>`<tr><td><b>${esc(x.reference)}</b><br><small class="muted">${esc(x.user_id)}</small></td><td>₦${(Number(x.amount_kobo||0)/100).toLocaleString('en-NG')}</td><td>${esc(x.status)}</td><td>Verified automatically by Paystack</td></tr>`).join('')}</tbody></table>`:'<p class="hint">No payment records yet.</p>';
-    $('#setPrice').value=s.pro_price_ngn;$('#setText').value=s.free_ai_text_daily;$('#setImage').value=s.free_ai_image_daily;
+      <div class="stat"><strong>${money(list[0]?.price_ngn)}</strong><span>Monthly plan price</span></div>`;
+    $('#adminPayments').innerHTML=p.length?`<table class="tbl"><thead><tr><th>Reference and user</th><th>Plan</th><th>Amount</th><th>Status</th></tr></thead><tbody>${p.map(x=>`<tr><td><b>${esc(x.reference)}</b><br><small class="muted">${esc(x.user_id)}</small></td><td>${esc(x.plan_name||'Pro')}</td><td>${money(Number(x.amount_kobo||0)/100)}</td><td>${esc(x.status)}</td></tr>`).join('')}</tbody></table>`:'<p class="hint">No payment records yet.</p>';
+    $('#setText').value=s.free_ai_text_daily;$('#setImage').value=s.free_ai_image_daily;
+    $('#setCbt').value=s.free_cbt_daily;$('#setPractice').value=s.free_practice_daily;
+    renderPlanEditor(list);
     renderAdminUsers(users);
   }catch(e){adminMsg(e.message,true)}
 }
 function renderAdminUsers(users){
-  $('#adminUsers').innerHTML=users.length?`<table class="tbl"><thead><tr><th>Knexa ID</th><th>Plan</th><th>Expiry</th><th>Action</th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.knexa_id||u.id)}</b></td><td>${esc(u.subscription?.status||'free')}</td><td>${esc(u.subscription?.expires_at||'—')}</td><td><button class="btn sm" data-grant-user="${esc(u.knexa_id||u.id)}">Grant 1 month</button> <button class="btn sm" data-revoke-user="${esc(u.knexa_id||u.id)}">Revoke Pro</button></td></tr>`).join('')}</tbody></table>`:'<p class="hint">No users found.</p>';
+  $('#adminUsers').innerHTML=users.length?`<table class="tbl"><thead><tr><th>Knexa ID</th><th>Plan</th><th>Expiry</th><th>Action</th></tr></thead><tbody>${users.map(u=>`<tr><td><b>${esc(u.knexa_id||u.id)}</b></td><td>${esc(u.subscription?.status||'free')}</td><td>${esc(u.subscription?.expires_at||'—')}</td><td><button class="btn sm" data-grant-user="${esc(u.knexa_id||u.id)}">Grant 30 days</button> <button class="btn sm" data-revoke-user="${esc(u.knexa_id||u.id)}">Revoke Pro</button></td></tr>`).join('')}</tbody></table>`:'<p class="hint">No users found.</p>';
 }
 $('#refreshAdmin').addEventListener('click',refreshAdmin);
 $('#refreshUsers').addEventListener('click',async()=>{try{renderAdminUsers(await api('/api/admin/users'))}catch(e){adminMsg(e.message,true)}});
@@ -1360,7 +1475,7 @@ $('#adminUsers').addEventListener('click',async e=>{
   const grant=e.target.closest('[data-grant-user]'),revoke=e.target.closest('[data-revoke-user]');
   if(!grant&&!revoke)return;
   const uid=(grant||revoke).dataset[grant?'grantUser':'revokeUser'];
-  if(!confirm(grant?'Grant this account one month of Pro?':'Immediately revoke this account’s active Pro access?'))return;
+  if(!confirm(grant?'Grant this account 30 days of Pro?':'Immediately revoke this account’s active Pro access?'))return;
   try{
     await api(grant?'/api/admin/subscription/grant':'/api/admin/subscription/revoke',{method:'POST',body:{user_id:uid}});
     adminMsg(grant?'Pro access granted.':'Pro access revoked.');await refreshAdmin();
@@ -1369,23 +1484,31 @@ $('#adminUsers').addEventListener('click',async e=>{
 $('#adminSettingsForm').addEventListener('submit',async e=>{
   e.preventDefault();
   try{
-    await api('/api/admin/settings',{method:'PUT',body:{pro_price_ngn:Number($('#setPrice').value)||3500,free_ai_text_daily:Number($('#setText').value),free_ai_image_daily:Number($('#setImage').value)}});
-    adminMsg('Plan settings saved.');await refreshAdmin();
+    await api('/api/admin/settings',{method:'PUT',body:{
+      free_ai_text_daily:Number($('#setText').value),
+      free_ai_image_daily:Number($('#setImage').value),
+      free_cbt_daily:Number($('#setCbt').value),
+      free_practice_daily:Number($('#setPractice').value)}});
+    adminMsg('Allowances saved. They apply from the next request.');
   }catch(err){adminMsg(err.message,true)}
 });
 $('#grantForm').addEventListener('submit',async e=>{
   e.preventDefault();
-  if(!confirm('Grant this account one month of Pro access?'))return;
+  if(!confirm('Grant this account 30 days of Pro access?'))return;
   try{
     await api('/api/admin/subscription/grant',{method:'POST',body:{user_id:$('#grantUser').value.trim()}});
-    adminMsg('Pro access granted for one month.');e.target.reset();await refreshAdmin();
+    adminMsg('Pro access granted for 30 days.');e.target.reset();await refreshAdmin();
   }catch(err){adminMsg(err.message,true)}
 });
 
 /* ---------- startup ---------- */
 setTheme(document.documentElement.dataset.theme==='dark'?'dark':'light');
 route();
+installUI();
 resume();
+if('serviceWorker' in navigator){
+  addEventListener('load',()=>navigator.serviceWorker.register('/service-worker.js').catch(err=>console.warn('Service worker not registered',err)));
+}
 (async()=>{
   const u=new URL(location.href);
   if(u.searchParams.get('payment')==='paystack'){

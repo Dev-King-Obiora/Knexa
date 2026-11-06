@@ -4,7 +4,7 @@ Run:  uvicorn main:app --host 0.0.0.0 --port $PORT
 Env:  GROQ_API_KEY, GEMINI_API_KEY, UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN,
       PAYSTACK_SECRET_KEY, OWNER_KNEXA_ID, optional SECRET_KEY, FRONTEND_ORIGIN,
       PUBLIC_APP_URL, TRUST_PROXY, PROXY_HOPS, ALLOWED_HOSTS.
-Exams, accounts and quotas live in Upstash Redis, so state survives restarts.
+Exams, accounts, plans, allowances and quotas live in Upstash Redis, so state survives restarts.
 """
 from __future__ import annotations
 
@@ -78,13 +78,13 @@ UPSTASH_TOKEN = os.getenv("UPSTASH_REDIS_REST_TOKEN", "")
 PAYSTACK_SECRET_KEY = os.getenv("PAYSTACK_SECRET_KEY", "")
 PUBLIC_APP_URL = os.getenv("PUBLIC_APP_URL", "").rstrip("/")
 OWNER_KNEXA_ID = os.getenv("OWNER_KNEXA_ID", "").strip().upper()
-PRO_PRICE_NGN = 3500
-PRO_PERIOD_SECONDS = 30 * 86400
+PRO_PRICE_NGN = 5000                      # monthly reference price only; live plan prices are in Redis
+PRO_PERIOD_SECONDS = 30 * 86400          # used for manual grants
 FREE_LIMITS = {
     "ai_text": max(1, _int("FREE_AI_TEXT_DAILY", 5)),
     "ai_image": max(0, _int("FREE_AI_IMAGE_DAILY", 2)),
     "practice": max(0, _int("FREE_PRACTICE_DAILY", 1)),
-    "cbt": max(0, _int("FREE_CBT_DAILY", 1)),
+    "cbt": max(0, _int("FREE_CBT_DAILY", 2)),
 }
 PRO_BASE_LIMITS = {
     "ai_text": _int("PRO_AI_TEXT_DAILY", 500),
@@ -264,6 +264,9 @@ async def crash(_: Request, exc: Exception):
 
 
 # ----------------------------------------------------------------------------- request models
+PLAN_ID_PATTERN = r"^(monthly|quarterly|half-yearly|annual)$"
+
+
 class SolveRequest(BaseModel):
     question: str = Field(min_length=1, max_length=6000)
     level: str = Field(default="Secondary school", max_length=80)
@@ -312,18 +315,27 @@ class RecoverPayload(BaseModel):
 
 class PaystackInitPayload(BaseModel):
     email: str = Field(default="", max_length=320)
+    plan_id: str = Field(default="monthly", pattern=PLAN_ID_PATTERN)
 
 
-class AdminDecision(BaseModel):
-    payment_id: str = Field(min_length=8, max_length=100)
-    decision: str = Field(pattern="^(approve|reject)$")
-    note: str = Field(default="", max_length=500)
+class PlanUpdate(BaseModel):
+    id: str = Field(pattern=PLAN_ID_PATTERN)
+    name: str = Field(min_length=1, max_length=40)
+    price_ngn: int = Field(ge=100, le=5_000_000)
+    enabled: bool
+    label: str = Field(default="", max_length=40)
+    description: str = Field(default="", max_length=240)
+
+
+class PlansUpdate(BaseModel):
+    plans: list[PlanUpdate] = Field(min_length=4, max_length=4)
 
 
 class AdminSettings(BaseModel):
-    pro_price_ngn: int = Field(default=PRO_PRICE_NGN, ge=PRO_PRICE_NGN, le=PRO_PRICE_NGN)
     free_ai_text_daily: int = Field(ge=0, le=1000)
     free_ai_image_daily: int = Field(ge=0, le=100)
+    free_cbt_daily: int = Field(ge=0, le=50)
+    free_practice_daily: int = Field(ge=0, le=100)
 
 
 class UserRef(BaseModel):
@@ -699,6 +711,7 @@ def public_exam(ex: dict[str, Any]) -> dict[str, Any]:
 
 @app.post("/api/exam/generate")
 async def generate_exam(req: ExamGenerateRequest, request: Request):
+    # The CBT allowance is consumed here, on the server, before any AI work starts.
     await _require_ai(request, "cbt", heavy=True)
     sid = request.state.sid
     topic, level = clean_text(req.topic, 300), clean_level(req.level)
@@ -887,7 +900,7 @@ async def analyse_exam(exam_id: str, request: Request):
     return ex["analysis"]
 
 
-# ============================================================================= ACCOUNTS, PRO, PAYMENTS, ADMIN
+# ============================================================================= ACCOUNTS, PLANS, PAYMENTS, ADMIN
 def _redis_ready() -> bool:
     return bool(UPSTASH_URL and UPSTASH_TOKEN)
 
@@ -943,6 +956,100 @@ async def _throttle(name: str, request: Request, limit: int, window: int, msg: s
     return key
 
 
+# ----------------------------------------------------------------------------- subscription plans
+PLAN_KEY = "knexa:plans"
+PLAN_DEFAULTS = [
+    {"id": "monthly", "name": "Monthly", "duration_days": 30, "price_ngn": 5000, "enabled": True,
+     "label": "", "description": "Full Pro access for one month."},
+    {"id": "quarterly", "name": "Quarterly", "duration_days": 90, "price_ngn": 19000, "enabled": True,
+     "label": "", "description": "Three months of Pro access."},
+    {"id": "half-yearly", "name": "Half-Yearly", "duration_days": 180, "price_ngn": 28000, "enabled": True,
+     "label": "Popular", "description": "Six months of Pro access at a lower monthly cost."},
+    {"id": "annual", "name": "Annual", "duration_days": 365, "price_ngn": 55000, "enabled": True,
+     "label": "Best value", "description": "Twelve months of Pro access at the lowest yearly cost."},
+]
+PLAN_IDS = [p["id"] for p in PLAN_DEFAULTS]
+
+
+async def get_plans() -> list[dict]:
+    """Admin-editable fields come from Redis. Duration is fixed in code, so the admin cannot change what a plan grants."""
+    saved = await _rget(PLAN_KEY)
+    merged = {p["id"]: dict(p) for p in PLAN_DEFAULTS}
+    if isinstance(saved, list):
+        for s in saved:
+            if isinstance(s, dict) and s.get("id") in merged:
+                base = merged[s["id"]]
+                for k in ("name", "price_ngn", "enabled", "label", "description"):
+                    if k in s:
+                        base[k] = s[k]
+    return [merged[p["id"]] for p in PLAN_DEFAULTS]
+
+
+async def get_plan(plan_id: str) -> Optional[dict]:
+    for p in await get_plans():
+        if p["id"] == plan_id:
+            return p
+    return None
+
+
+# ----------------------------------------------------------------------------- Lua scripts
+# Atomic account creation: the account and its login index are claimed together.
+CREATE_ACCOUNT_LUA = r"""
+if redis.call('EXISTS', KEYS[1]) == 1 or redis.call('EXISTS', KEYS[2]) == 1 then
+  return 0
+end
+redis.call('SET', KEYS[1], ARGV[1])
+redis.call('SET', KEYS[2], ARGV[2])
+redis.call('SADD', KEYS[3], ARGV[3])
+return 1
+"""
+
+# Atomic daily quota: no read-then-increment race.
+CONSUME_QUOTA_LUA = r"""
+local current = tonumber(redis.call('GET', KEYS[1]) or '0')
+local limit = tonumber(ARGV[1])
+if current >= limit then return {0, current, limit} end
+local next = redis.call('INCR', KEYS[1])
+if next == 1 then redis.call('EXPIRE', KEYS[1], tonumber(ARGV[2])) end
+return {1, next, limit}
+"""
+
+# Atomic, idempotent fulfilment. The duration comes from the payment record created by the server.
+# Renewals extend from the current expiry, so no paid days are lost.
+ACTIVATE_PAYMENT_LUA = r"""
+local raw = redis.call('GET', KEYS[1])
+if not raw then return cjson.encode({error='PAYMENT_NOT_FOUND'}) end
+local payment = cjson.decode(raw)
+if payment.channel ~= 'paystack' then return cjson.encode({error='PAYMENT_CHANNEL_MISMATCH'}) end
+if payment.status == 'paid' then
+  return cjson.encode({activated=true, duplicate=true, subscription_id=payment.subscription_id, expires_at=payment.expires_at})
+end
+if payment.status ~= 'pending' then return cjson.encode({error='PAYMENT_NOT_PAYABLE'}) end
+local userraw = redis.call('GET', KEYS[2])
+if not userraw then return cjson.encode({error='USER_NOT_FOUND'}) end
+local user = cjson.decode(userraw)
+local now = tonumber(ARGV[1])
+local start = now
+if tonumber(user.subscription_expires_at or 0) > now then start = tonumber(user.subscription_expires_at) end
+local finish = start + tonumber(ARGV[3])
+local subid = ARGV[2]
+user.subscription_id = subid
+user.subscription_starts_at = start
+user.subscription_expires_at = finish
+user.subscription_source = 'paystack'
+payment.status = 'paid'
+payment.paid_at = now
+payment.subscription_id = subid
+payment.expires_at = finish
+redis.call('SET', KEYS[2], cjson.encode(user))
+redis.call('SET', KEYS[1], cjson.encode(payment))
+redis.call('SET', KEYS[3], cjson.encode({id=subid, user_id=user.knexa_id, status='active', starts_at=start, expires_at=finish, source='paystack', plan_id=payment.plan_id, created_at=now}))
+redis.call('SADD', KEYS[4], subid)
+return cjson.encode({activated=true, duplicate=false, subscription_id=subid, expires_at=finish})
+"""
+
+
+# ----------------------------------------------------------------------------- credentials and tokens
 def _utc_iso(ts: float | int | None):
     return datetime.fromtimestamp(float(ts), timezone.utc).isoformat() if ts else None
 
@@ -998,61 +1105,6 @@ def _token_user(token: str) -> Optional[tuple[str, int]]:
         return None
 
 
-# Atomic account creation: the account and its login index are claimed together.
-CREATE_ACCOUNT_LUA = r"""
-if redis.call('EXISTS', KEYS[1]) == 1 or redis.call('EXISTS', KEYS[2]) == 1 then
-  return 0
-end
-redis.call('SET', KEYS[1], ARGV[1])
-redis.call('SET', KEYS[2], ARGV[2])
-redis.call('SADD', KEYS[3], ARGV[3])
-return 1
-"""
-
-# Atomic daily quota: no read-then-increment race.
-CONSUME_QUOTA_LUA = r"""
-local current = tonumber(redis.call('GET', KEYS[1]) or '0')
-local limit = tonumber(ARGV[1])
-if current >= limit then return {0, current, limit} end
-local next = redis.call('INCR', KEYS[1])
-if next == 1 then redis.call('EXPIRE', KEYS[1], tonumber(ARGV[2])) end
-return {1, next, limit}
-"""
-
-# Atomic, idempotent fulfilment: one payment reference activates one 30-day period.
-ACTIVATE_PAYMENT_LUA = r"""
-local raw = redis.call('GET', KEYS[1])
-if not raw then return cjson.encode({error='PAYMENT_NOT_FOUND'}) end
-local payment = cjson.decode(raw)
-if payment.channel ~= 'paystack' then return cjson.encode({error='PAYMENT_CHANNEL_MISMATCH'}) end
-if payment.status == 'paid' then
-  return cjson.encode({activated=true, duplicate=true, subscription_id=payment.subscription_id, expires_at=payment.expires_at})
-end
-if payment.status ~= 'pending' then return cjson.encode({error='PAYMENT_NOT_PAYABLE'}) end
-local userraw = redis.call('GET', KEYS[2])
-if not userraw then return cjson.encode({error='USER_NOT_FOUND'}) end
-local user = cjson.decode(userraw)
-local now = tonumber(ARGV[1])
-local start = now
-if tonumber(user.subscription_expires_at or 0) > now then start = tonumber(user.subscription_expires_at) end
-local finish = start + tonumber(ARGV[3])
-local subid = ARGV[2]
-user.subscription_id = subid
-user.subscription_starts_at = start
-user.subscription_expires_at = finish
-user.subscription_source = 'paystack'
-payment.status = 'paid'
-payment.paid_at = now
-payment.subscription_id = subid
-payment.expires_at = finish
-redis.call('SET', KEYS[2], cjson.encode(user))
-redis.call('SET', KEYS[1], cjson.encode(payment))
-redis.call('SET', KEYS[3], cjson.encode({id=subid, user_id=user.knexa_id, status='active', starts_at=start, expires_at=finish, source='paystack', created_at=now}))
-redis.call('SADD', KEYS[4], subid)
-return cjson.encode({activated=true, duplicate=false, subscription_id=subid, expires_at=finish})
-"""
-
-
 async def _create_account_record():
     access_code = _new_access_code()
     recovery_code = _new_recovery_code()
@@ -1097,11 +1149,21 @@ async def _profile(user: dict) -> dict:
                "expires_at": _utc_iso(user.get("subscription_expires_at"))}
     expiry = float(user.get("subscription_expires_at") or 0)
     days_left = max(0, int((expiry - time.time() + 86399) // 86400)) if active else 0
+    await _load_settings()
     return {"user_id": user["knexa_id"], "knexa_id": user["knexa_id"], "plan": "pro" if active else "free",
             "subscription": sub, "is_admin": bool(OWNER_KNEXA_ID and user["knexa_id"] == OWNER_KNEXA_ID),
-            "price_ngn": PRO_PRICE_NGN, "limits": FREE_LIMITS,
+            "limits": FREE_LIMITS,
             "expiry_notice": (f"Your Pro access expires in {days_left} day(s). Renew to keep Pro access."
                               if active and days_left <= 3 else None)}
+
+
+# ----------------------------------------------------------------------------- allowances
+SETTING_FIELDS = (
+    ("ai_text", "free_ai_text_daily", 0, 1000),
+    ("ai_image", "free_ai_image_daily", 0, 100),
+    ("cbt", "free_cbt_daily", 0, 50),
+    ("practice", "free_practice_daily", 0, 100),
+)
 
 
 async def _load_settings(force: bool = False) -> None:
@@ -1110,11 +1172,16 @@ async def _load_settings(force: bool = False) -> None:
         return
     saved = await _rget("knexa:settings")
     if isinstance(saved, dict):
-        if "free_ai_text_daily" in saved:
-            FREE_LIMITS["ai_text"] = _clamp(int(saved["free_ai_text_daily"]), 0, 1000)
-        if "free_ai_image_daily" in saved:
-            FREE_LIMITS["ai_image"] = _clamp(int(saved["free_ai_image_daily"]), 0, 100)
+        for feature, field, lo, hi in SETTING_FIELDS:
+            if field in saved:
+                try:
+                    FREE_LIMITS[feature] = _clamp(int(saved[field]), lo, hi)
+                except (TypeError, ValueError):
+                    pass
     _SETTINGS_TS = time.time()
+
+
+_FEATURE_LABELS = {"ai_text": "AI text solves", "ai_image": "AI photo solves", "cbt": "CBT exams", "practice": "practice questions"}
 
 
 async def _quota(user: dict, feature: str) -> None:
@@ -1125,8 +1192,9 @@ async def _quota(user: dict, feature: str) -> None:
         limit = max(FREE_LIMITS[feature], PRO_BASE_LIMITS[feature])
     else:
         limit = FREE_LIMITS[feature]
+    label = _FEATURE_LABELS.get(feature, feature)
     if limit <= 0:
-        raise HTTPException(429, f"Your plan does not include {feature.replace('_', ' ')} right now. Upgrade to Pro.")
+        raise HTTPException(429, f"{label.capitalize()} are not included in the free plan right now. Upgrade to Pro for more access.")
     lagos = datetime.now(ZoneInfo("Africa/Lagos"))
     day = lagos.strftime("%Y-%m-%d")
     tomorrow = (lagos + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -1135,7 +1203,7 @@ async def _quota(user: dict, feature: str) -> None:
     result = await _redis("EVAL", CONSUME_QUOTA_LUA, "1", key, str(limit), str(ttl))
     if not result or int(result[0]) != 1:
         used = int(result[1]) if result else limit
-        raise HTTPException(429, f"Daily {feature.replace('_', ' ')} limit reached ({used}/{limit}). Upgrade to Pro or try again tomorrow.")
+        raise HTTPException(429, f"Daily limit reached for {label} ({used} of {limit} used). Upgrade to Pro or try again tomorrow.")
 
 
 async def quota_gate(request: Request, feature: str) -> None:
@@ -1154,11 +1222,12 @@ async def _activate_payment(reference: str) -> dict:
     payment = await _rget(f"knexa:payment:{reference}")
     if not payment:
         raise HTTPException(404, "Payment reference not found.")
+    duration = int(payment.get("duration_seconds") or PRO_PERIOD_SECONDS)
     sub_id = "KSUB-" + secrets.token_hex(8).upper()
     raw = await _redis("EVAL", ACTIVATE_PAYMENT_LUA, "4",
                        f"knexa:payment:{reference}", f"knexa:user:{payment['user_id']}",
                        f"knexa:subscription:{sub_id}", "knexa:subscriptions",
-                       str(time.time()), sub_id, str(PRO_PERIOD_SECONDS))
+                       str(time.time()), sub_id, str(duration))
     try:
         result = json.loads(raw) if isinstance(raw, str) else (raw or {})
     except Exception:
@@ -1168,6 +1237,7 @@ async def _activate_payment(reference: str) -> dict:
     return result
 
 
+# ----------------------------------------------------------------------------- auth routes
 @app.post("/api/auth/create")
 async def auth_create(_: CreateAccountPayload = CreateAccountPayload()):
     credentials = await _create_account_record()
@@ -1222,6 +1292,12 @@ async def auth_logout():
     return {"signed_out": True}
 
 
+# ----------------------------------------------------------------------------- public plans and payments
+@app.get("/api/plans")
+async def public_plans():
+    return [p for p in await get_plans() if p["enabled"]]
+
+
 @app.get("/api/payments/history")
 async def payment_history(request: Request):
     user = await _auth_user(request)
@@ -1230,26 +1306,30 @@ async def payment_history(request: Request):
     for ref in refs:
         item = await _rget(f"knexa:payment:{ref}")
         if item:
-            rows.append({k: item.get(k) for k in ("id", "reference", "channel", "amount_kobo", "currency",
-                                                  "status", "created_at", "paid_at")})
+            rows.append({k: item.get(k) for k in ("id", "reference", "channel", "plan_name", "amount_kobo",
+                                                  "currency", "status", "created_at", "paid_at")})
     return sorted(rows, key=lambda x: x.get("created_at") or 0, reverse=True)
 
 
 @app.post("/api/payments/paystack/initialize")
 async def paystack_initialize(payload: PaystackInitPayload, request: Request):
+    """The price comes only from the server's plan list. Frontend-supplied amounts are never used."""
     user = await _auth_user(request)
-    if _plan(user) == "pro":
-        raise HTTPException(409, "Your Pro subscription is already active.")
+    plan = await get_plan(payload.plan_id)
+    if not plan or not plan["enabled"]:
+        raise HTTPException(400, "This plan is not available right now.")
     if not PAYSTACK_SECRET_KEY:
         raise HTTPException(503, "Paystack is not configured. Add PAYSTACK_SECRET_KEY to the server.")
     typed = payload.email.strip().lower()
     email = typed or f"{user['knexa_id'].lower()}@accounts.knexa.ai"
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email):
-        raise HTTPException(400, "Enter a valid email address for your Paystack receipt.")
-    amount = PRO_PRICE_NGN * 100
+        raise HTTPException(400, "Enter a valid email address for your receipt.")
+    amount = int(plan["price_ngn"]) * 100
     reference = "KNX-" + secrets.token_urlsafe(20).replace("-", "A").replace("_", "B")
     payment = {"id": "KPAY-" + secrets.token_hex(8).upper(), "user_id": user["knexa_id"], "reference": reference,
-               "channel": "paystack", "amount_kobo": amount, "currency": "NGN", "status": "pending",
+               "channel": "paystack", "plan_id": plan["id"], "plan_name": plan["name"],
+               "duration_seconds": int(plan["duration_days"]) * 86400,
+               "amount_kobo": amount, "currency": "NGN", "status": "pending",
                "created_at": time.time(), "customer_email": email}
     if await _redis("SET", f"knexa:payment:{reference}", json.dumps(payment, separators=(",", ":")), "NX") != "OK":
         raise HTTPException(503, "Could not reserve a payment reference. Please retry.")
@@ -1262,7 +1342,8 @@ async def paystack_initialize(payload: PaystackInitPayload, request: Request):
             headers={"Authorization": f"Bearer {PAYSTACK_SECRET_KEY}", "Content-Type": "application/json"},
             json={"email": email, "amount": amount, "currency": "NGN", "reference": reference,
                   "callback_url": callback,
-                  "metadata": {"knexa_id": user["knexa_id"], "product": "Knexa AI Pro, 30 days"}})
+                  "metadata": {"knexa_id": user["knexa_id"], "plan_id": plan["id"],
+                               "product": f"Knexa AI Pro, {plan['name']}"}})
     data = response.json() if response.content else {}
     if response.status_code >= 400 or not data.get("status"):
         payment["status"] = "failed"
@@ -1324,6 +1405,7 @@ async def paystack_webhook(request: Request):
     return {"received": True}
 
 
+# ----------------------------------------------------------------------------- owner admin
 @app.get("/api/admin/overview")
 async def admin_overview(request: Request):
     await _admin(request)
@@ -1375,31 +1457,44 @@ async def admin_payments(request: Request):
     return sorted(rows, key=lambda p: p.get("created_at", 0), reverse=True)[:500]
 
 
-@app.post("/api/admin/payment-decision")
-async def admin_payment_decision(payload: AdminDecision, request: Request):
+@app.get("/api/admin/plans")
+async def admin_get_plans(request: Request):
     await _admin(request)
-    raise HTTPException(400, "Only verified Paystack payments can activate Pro. Manual payment approval is disabled.")
+    return await get_plans()
+
+
+@app.put("/api/admin/plans")
+async def admin_save_plans(payload: PlansUpdate, request: Request):
+    await _admin(request)
+    if sorted(p.id for p in payload.plans) != sorted(PLAN_IDS):
+        raise HTTPException(400, "Provide each of the four plans exactly once.")
+    if not any(p.enabled for p in payload.plans):
+        raise HTTPException(400, "At least one plan must stay enabled.")
+    by_id = {p.id: p for p in payload.plans}
+    saved = []
+    for base in PLAN_DEFAULTS:
+        u = by_id[base["id"]]
+        saved.append({"id": u.id, "name": clean_text(u.name, 40), "duration_days": base["duration_days"],
+                      "price_ngn": u.price_ngn, "enabled": u.enabled,
+                      "label": clean_text(u.label, 40), "description": clean_text(u.description, 240)})
+    await _rset(PLAN_KEY, saved)
+    return await get_plans()
 
 
 @app.get("/api/admin/settings")
 async def admin_settings(request: Request):
     await _admin(request)
     await _load_settings(force=True)
-    return {"pro_price_ngn": PRO_PRICE_NGN, "free_ai_text_daily": FREE_LIMITS["ai_text"],
-            "free_ai_image_daily": FREE_LIMITS["ai_image"], "free_practice_daily": FREE_LIMITS["practice"],
-            "free_cbt_daily": FREE_LIMITS["cbt"]}
+    return {"free_ai_text_daily": FREE_LIMITS["ai_text"], "free_ai_image_daily": FREE_LIMITS["ai_image"],
+            "free_cbt_daily": FREE_LIMITS["cbt"], "free_practice_daily": FREE_LIMITS["practice"]}
 
 
 @app.put("/api/admin/settings")
 async def update_admin_settings(payload: AdminSettings, request: Request):
-    global _SETTINGS_TS
     await _admin(request)
-    FREE_LIMITS["ai_text"] = payload.free_ai_text_daily
-    FREE_LIMITS["ai_image"] = payload.free_ai_image_daily
-    await _rset("knexa:settings", {"free_ai_text_daily": payload.free_ai_text_daily,
-                                   "free_ai_image_daily": payload.free_ai_image_daily})
-    _SETTINGS_TS = time.time()
-    return {"saved": True, "pro_price_ngn": PRO_PRICE_NGN}
+    await _rset("knexa:settings", payload.model_dump())
+    await _load_settings(force=True)
+    return {"saved": True}
 
 
 @app.post("/api/admin/subscription/grant")
@@ -1442,8 +1537,7 @@ def knexa_health():
             "paystack_configured": bool(PAYSTACK_SECRET_KEY)}
 
 
-# Keep this block LAST: the previous version started uvicorn before the account routes were defined,
-# so they were never registered when run directly.
+# Keep this block LAST so every route above is registered before the server starts.
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")), workers=1,

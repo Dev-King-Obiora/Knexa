@@ -1,0 +1,23 @@
+{
+  "name": "Knexa AI · Learn with clarity",
+  "short_name": "Knexa AI",
+  "description": "AI tutoring, practice and computer-based exam preparation.",
+  "id": "/",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f3ee",
+  "theme_color": "#1c3556",
+  "categories": ["education"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Solve a question", "url": "/#solve" },
+    { "name": "Start a CBT exam", "url": "/#cbt" }
+  ]
+}
