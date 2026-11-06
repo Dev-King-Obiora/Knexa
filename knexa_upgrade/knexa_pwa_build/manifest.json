@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "Knexa AI — Learn with clarity",
+  "short_name": "Knexa AI",
+  "description": "A focused mathematics and science learning companion with worked solutions, practice and timed CBT exams.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "theme_color": "#101e30",
+  "background_color": "#f5f3ee",
+  "categories": ["education", "productivity"],
+  "icons": [
+    { "src": "/icons/knexa-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/knexa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/knexa-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Solve a question", "short_name": "Solve", "url": "/#solve" },
+    { "name": "Practice topics", "short_name": "Practice", "url": "/#explore" },
+    { "name": "Start a CBT", "short_name": "CBT", "url": "/#cbt" }
+  ]
+}
