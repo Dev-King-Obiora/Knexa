@@ -1299,7 +1299,10 @@ async def _activate_payment(reference: str) -> dict:
 @app.get("/api/plans")
 async def public_plans():
     await _load_settings(force=True)
-    return {"plans": [p for p in _public_plans() if p["enabled"]]}
+    # Limits mirror the quota engine: a Pro member gets the higher of the free and Pro allowance.
+    return {"plans": [p for p in _public_plans() if p["enabled"]],
+            "free_limits": dict(FREE_LIMITS),
+            "pro_limits": {k: max(FREE_LIMITS[k], PRO_BASE_LIMITS[k]) for k in FREE_LIMITS}}
 
 
 @app.post("/api/auth/create")

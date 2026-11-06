@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'knexa-shell-v1';
+const CACHE_NAME = 'knexa-shell-v2';
 const SHELL_URLS = [
   '/',
   '/index.html',

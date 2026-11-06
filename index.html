@@ -400,6 +400,142 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   .tcard{padding:15px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- Mobile menu, drawer, Premium page and mobile polish ---------- */
+.icon-btn{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);flex-shrink:0;cursor:pointer;transition:border-color .2s,background .2s,transform .15s var(--ease)}
+.icon-btn:hover{border-color:var(--gold)}
+.icon-btn:active{transform:scale(.95)}
+.icon-btn .ic{width:21px;height:21px}
+.drawer-scrim,.drawer{display:none}
+.sec-head{margin-bottom:16px}
+.sec-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(21px,2.6vw,27px);margin:4px 0 6px;line-height:1.2}
+.sec-head .hint{margin:0;max-width:660px}
+.prem-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:30px;align-items:center;padding:clamp(24px,4vw,46px);border-radius:26px;border:1px solid color-mix(in srgb,var(--gold) 38%,var(--line));background:radial-gradient(520px 280px at 100% 0%,color-mix(in srgb,var(--gold) 20%,transparent),transparent 70%),linear-gradient(150deg,var(--surface),var(--surface2));box-shadow:var(--shadow-lg);animation:rise .6s var(--ease) both}
+.prem-hero h1{font-size:clamp(30px,4vw,44px);margin-bottom:12px}
+.prem-cta{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;margin-top:24px}
+.prem-perks{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.prem-perks li{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);min-width:0}
+.prem-perks b{display:block;font-size:14.5px}
+.prem-perks small{display:block;font-size:13px;color:var(--muted);line-height:1.45}
+.perk-ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:var(--gold-soft);color:var(--gold);font-family:var(--serif);font-size:20px;font-weight:600}
+.prem-status{border-color:color-mix(in srgb,var(--gold) 30%,var(--line))}
+.ps-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.ps-row h2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--serif);font-weight:600;font-size:24px;margin:4px 0 6px}
+.ps-row .hint{margin:0;max-width:560px}
+.ps-grid,.ps-limits{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:16px}
+.ps-grid>div,.ps-limits>div{padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface2);display:flex;flex-direction:column;gap:3px;min-width:0}
+.ps-grid .hint,.ps-limits span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--muted)}
+.ps-grid strong,.ps-limits strong{font-size:15px;overflow-wrap:anywhere}
+.prem-plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch}
+.prem-plan{position:relative;display:flex;flex-direction:column;gap:8px;padding:22px 20px 18px;border:1px solid var(--line);border-radius:22px;background:var(--surface);cursor:pointer;min-width:0;transition:border-color .25s,box-shadow .3s,transform .25s var(--ease),background .25s}
+.prem-plan:hover{border-color:var(--gold);transform:translateY(-3px)}
+.prem-plan:focus-within{outline:3px solid color-mix(in srgb,var(--gold) 55%,transparent);outline-offset:3px}
+.prem-plan input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+.prem-plan.rec{box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 40%,transparent),0 26px 44px -30px var(--gold)}
+.prem-plan.sel{border:1.5px solid var(--gold);background:linear-gradient(170deg,var(--gold-soft),var(--surface) 72%);box-shadow:0 22px 40px -26px var(--gold)}
+.pp-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;min-height:24px}
+.pp-name{font-weight:800;font-size:14px}
+.pp-tag{font-size:10.5px;font-weight:800;padding:4px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);letter-spacing:.02em;white-space:nowrap}
+.prem-plan.rec .pp-tag{background:var(--gold);color:#fff}
+[data-theme=dark] .prem-plan.rec .pp-tag{color:#0a1220}
+.pp-price{display:block;font-family:var(--serif);font-size:32px;font-weight:700;line-height:1.1;margin-top:8px;overflow-wrap:anywhere}
+.pp-period{display:block;font-size:13.5px;font-weight:700}
+.pp-equiv{display:block;font-size:12px;color:var(--muted)}
+.pp-desc{display:block;font-size:13px;color:var(--muted);line-height:1.5;padding-top:12px;border-top:1px dashed var(--line);margin-top:4px}
+.pp-feat{display:grid;gap:7px;font-size:13px;line-height:1.4}
+.pp-feat span{display:grid;grid-template-columns:16px minmax(0,1fr);gap:6px}
+.pp-feat span::before{content:"✓";color:var(--good);font-weight:800}
+.pp-cta{display:block;margin-top:auto;padding-top:12px;font-size:13px;font-weight:800;color:var(--accent)}
+[data-theme=dark] .pp-cta{color:var(--gold-hi)}
+.prem-plan.sel .pp-cta{color:var(--gold)}
+.prem-checkout{border-color:var(--line)}
+.cmp{padding:0;overflow:hidden}
+.cmp-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:center;padding:15px 22px;border-top:1px solid var(--line);font-size:14px}
+.cmp-row:first-child{border-top:0}
+.cmp-head{background:var(--surface2);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.cmp-k{font-weight:700}
+.cmp-cell{text-align:center;overflow-wrap:anywhere}
+.cmp-cell small{display:none}
+.cmp-pro{color:var(--accent);font-weight:800}
+[data-theme=dark] .cmp-pro{color:var(--gold-hi)}
+.hist{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}
+.hist li{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:15px;background:var(--surface2);min-width:0}
+.hist li>div{min-width:0;display:flex;flex-direction:column;gap:3px}
+.hist li>div:last-child{align-items:flex-end;text-align:right;flex-shrink:0}
+.hist small{font-size:11.5px;overflow-wrap:anywhere}
+.hist strong{overflow-wrap:anywhere}
+.faq{display:grid;gap:8px;margin-top:16px}
+.faq details{border:1px solid var(--line);border-radius:15px;background:var(--surface2);padding:0 16px}
+.faq summary{cursor:pointer;list-style:none;padding:14px 0;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:20px;line-height:1;color:var(--gold);font-weight:700;transition:transform .25s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 14px;font-size:14px;color:var(--muted)}
+.perk-ic + div{min-width:0}
+.prem-cta .hint{margin:0}
+
+/* Drawer */
+.drawer-scrim{position:fixed;inset:0;z-index:38;background:rgba(6,12,22,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .35s var(--ease),visibility .35s}
+.drawer-scrim.open{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;bottom:0;z-index:39;width:min(340px,88vw);flex-direction:column;gap:2px;padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));background:var(--surface);border-left:1px solid var(--line);box-shadow:var(--shadow-lg);overflow-y:auto;overscroll-behavior:contain;transform:translateX(104%);visibility:hidden;transition:transform .42s var(--ease),visibility .42s}
+.drawer.open{transform:none;visibility:visible}
+body.drawer-open{overflow:hidden}
+.drawer-top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 2px 14px;border-bottom:1px solid var(--line);margin-bottom:10px}
+.drawer-top .brand{padding:0;font-size:17px;min-width:0}
+.drawer-top .brand small{display:block}
+.drawer-user{display:flex;align-items:center;gap:12px;padding:14px;margin:0 0 6px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,var(--surface2),var(--surface))}
+.drawer-avatar{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:linear-gradient(150deg,#1d3557,#0a1729);color:#f1ead8}
+[data-theme=dark] .drawer-avatar{background:linear-gradient(150deg,var(--gold-hi),var(--gold));color:#0a1220}
+.drawer-who{min-width:0;flex:1;display:flex;flex-direction:column}
+.drawer-who strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drawer-who span{font-size:12px;color:var(--muted)}
+.drawer-sec{margin:16px 6px 6px;font-size:10.5px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.drawer-item{position:relative;display:flex;align-items:center;gap:12px;width:100%;border:1px solid transparent;background:none;color:var(--ink);padding:10px;border-radius:15px;text-align:left;cursor:pointer;transition:background .2s,border-color .2s,transform .2s var(--ease)}
+.drawer-item:hover{background:var(--surface2);border-color:var(--line)}
+.drawer-item:active{transform:scale(.99)}
+.drawer-item:focus-visible{outline:3px solid color-mix(in srgb,var(--gold) 55%,transparent);outline-offset:-2px}
+.drawer-item[aria-current]{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 22%,transparent)}
+[data-theme=dark] .drawer-item[aria-current]{color:var(--gold-hi);border-color:color-mix(in srgb,var(--gold) 30%,transparent)}
+.drawer-item[aria-current]::before{content:"";position:absolute;left:-16px;top:24%;bottom:24%;width:3px;border-radius:0 3px 3px 0;background:var(--gold)}
+.di-ic{width:36px;height:36px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;background:var(--surface2);border:1px solid var(--line);color:var(--accent)}
+[data-theme=dark] .di-ic{color:var(--gold-hi)}
+.drawer-item[aria-current] .di-ic{background:var(--surface)}
+.di-txt{min-width:0;flex:1;display:flex;flex-direction:column;line-height:1.3}
+.di-txt b{font-size:14.5px;font-weight:700}
+.di-txt small{font-size:12px;color:var(--muted);margin-top:2px}
+.di-go{width:16px;height:16px;color:var(--muted);opacity:.7}
+.di-check{display:none;margin-left:auto;width:22px;height:22px;border-radius:50%;place-items:center;background:var(--accent);color:#fff;flex-shrink:0}
+[data-theme=dark] .di-check{background:var(--gold);color:#0a1220}
+.di-check .ic{width:13px;height:13px;stroke-width:3}
+.drawer-item[aria-current] .di-check{display:grid}
+.drawer-pro .di-ic{background:var(--gold-soft);color:var(--gold);border-color:color-mix(in srgb,var(--gold) 40%,var(--line))}
+.drawer-danger,.drawer-danger .di-ic{color:var(--bad)}
+.drawer-foot{margin:auto 0 0;padding:16px 6px 0;text-align:center;font-size:11.5px}
+
+/* Desktop keeps the sidebar; the mobile-only drawer and header are hidden above 860px */
+@media(max-width:1200px){.prem-plans{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1100px){.prem-hero{grid-template-columns:1fr;gap:22px}}
+@media(max-width:860px){
+  .drawer-scrim{display:block}
+  .drawer{display:flex}
+  .examtop{top:68px}
+  .katex-display{overflow-x:auto;overflow-y:hidden;max-width:100%}
+  .prem-cta .btn{width:100%}
+  .prem-cta .hint{text-align:center}
+}
+@media(max-width:560px){
+  .prem-plans{grid-template-columns:1fr}
+  .prem-plan{padding:20px 18px 16px}
+  .pp-price{font-size:30px}
+  .cmp-head{display:none}
+  .cmp-row{grid-template-columns:1fr 1fr;row-gap:8px;padding:14px 16px}
+  .cmp-k{grid-column:1/-1;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+  .cmp-cell{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px;font-size:15px}
+  .cmp-cell small{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .hist li{align-items:flex-start}
+  .ps-row .btn{width:100%}
+}
+@media(prefers-reduced-motion:reduce){.drawer,.drawer-scrim{transition:none}}
 </style>
 </head>
 <body>
@@ -421,6 +557,13 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></symbol>
 <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
 <symbol id="i-knexa" viewBox="0 0 48 48"><path d="M24 3.8 41.5 13.9v20.2L24 44.2 6.5 34.1V13.9L24 3.8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M17 14.5v19M31 14.5 18.5 24 31 33.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="34.5" cy="13.5" r="2.1" fill="#D7B573"/><circle cx="34.5" cy="34.5" r="2.1" fill="#D7B573"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.8l2.82 5.72 6.31.92-4.56 4.45 1.08 6.28L12 17.25l-5.65 2.97 1.08-6.28-4.56-4.45 6.31-.92L12 2.8z"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5M12 15V3"/></symbol>
+<symbol id="i-switch" viewBox="0 0 24 24"><path d="M16 3l4 4-4 4M20 7H4"/><path d="M8 21l-4-4 4-4M4 17h16"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></symbol>
+<symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></symbol>
+<symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
 </defs></svg>
 
 <div class="shell">
@@ -430,6 +573,7 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   <button class="nav-item" data-go="explore"><svg class="ic"><use href="#i-explore"/></svg>Practice topics</button>
   <button class="nav-item" data-go="cbt"><svg class="ic"><use href="#i-cbt"/></svg>CBT exam</button>
   <button class="nav-item" data-go="about"><svg class="ic"><use href="#i-about"/></svg>About and install</button>
+  <button class="nav-item" data-go="premium"><svg class="ic"><use href="#i-star"/></svg>Premium</button>
   <button class="nav-item" data-act="account-open"><svg class="ic"><use href="#i-user"/></svg>Account and Pro</button>
   <button class="nav-item" data-act="admin-open" id="adminNav" hidden><svg class="ic"><use href="#i-shield"/></svg>Private admin</button>
   <div class="spacer"></div>
@@ -439,11 +583,7 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 <div class="main">
 <header class="mtop">
   <div class="brand"><div class="mark" aria-hidden="true"><svg><use href="#i-knexa"/></svg></div><span>Knexa AI</span></div>
-  <div class="row" style="gap:8px">
-    <button class="btn sm" id="installTopBtn" type="button">Install app</button>
-    <button class="btn sm" data-act="account-open">Account</button>
-    <button class="btn sm" data-act="theme" aria-label="Toggle theme"></button>
-  </div>
+  <button class="icon-btn" id="menuBtn" type="button" data-act="drawer-open" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><svg class="ic" aria-hidden="true"><use href="#i-menu"/></svg></button>
 </header>
 
 <main class="page">
@@ -580,6 +720,48 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   <div id="examResults" hidden></div>
 </section>
 
+<!-- PREMIUM -->
+<section class="view" data-view="premium" id="view-premium" hidden>
+  <div class="prem-hero">
+    <div>
+      <p class="eyebrow">Knexa Pro</p>
+      <h1>More room to practise, every day.</h1>
+      <p class="lead">Higher daily limits for AI solving, photo solutions, practice topics and timed CBT exams. Choose the Pro period that fits your study calendar.</p>
+      <div class="prem-cta"><button class="btn primary" type="button" data-act="prem-scroll">View Pro plans</button><span class="hint">Secure payment through Paystack · no automatic renewal</span></div>
+    </div>
+    <ul class="prem-perks">
+      <li><span class="perk-ic" aria-hidden="true">∑</span><div><b>Higher daily limits</b><small>Solve more questions each day without waiting for the reset.</small></div></li>
+      <li><span class="perk-ic" aria-hidden="true">▣</span><div><b>Photo solutions</b><small>Photograph a printed or handwritten question and receive a worked solution.</small></div></li>
+      <li><span class="perk-ic" aria-hidden="true">✓</span><div><b>Timed CBT exams</b><small>Practise under exam conditions with instant marking and explanations.</small></div></li>
+    </ul>
+  </div>
+
+  <section class="card pad prem-status mt" id="premStatus" aria-live="polite"><div class="loading"><span class="spin" aria-hidden="true"></span><span>Loading your plan…</span></div></section>
+
+  <section class="mt3" id="premPlansSec">
+    <div class="sec-head"><p class="eyebrow">Pro periods</p><h2>Choose how long you study</h2><p class="hint">Prices are in Naira and paid once for each period. Pro access ends when the period does, unless you buy another.</p></div>
+    <div id="premPlans" class="prem-plans" aria-live="polite"><p class="hint">Loading plans…</p></div>
+    <div class="card pad prem-checkout mt" id="premCheckout">
+      <div class="row between wrap"><div><div class="lbl2">Selected plan</div><strong id="premSelected">—</strong></div><span class="badge plan">Paystack</span></div>
+      <label class="label mt" for="premEmail">Email for your receipt</label>
+      <input class="field" id="premEmail" type="email" maxlength="320" placeholder="you@example.com" autocomplete="email">
+      <button class="btn primary block mt" id="premPayBtn" type="button" disabled>Continue with Paystack</button>
+      <p class="hint mt2">You will finish payment on Paystack's secure checkout and return to Knexa. Pro activates once Knexa verifies the payment.</p>
+      <div id="premMsg" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="mt3">
+    <div class="sec-head"><p class="eyebrow">Compare</p><h2>Free and Pro at a glance</h2><p class="hint">Daily limits apply per Knexa account and reset each day in Lagos time.</p></div>
+    <div class="card cmp" id="premCompare"></div>
+  </section>
+
+  <section class="card pad mt3">
+    <div class="sec-head"><p class="eyebrow">Billing</p><h2>Payment history</h2></div>
+    <div id="premHistory"><p class="hint">Sign in to see your payments.</p></div>
+  </section>
+</section>
+
 <!-- ABOUT -->
 <section class="view" data-view="about" id="view-about" hidden>
   <div class="pagehead"><p class="eyebrow">About</p><h1>Learning built around understanding.</h1><p class="lead">Knexa AI takes you from a question to a clear explanation, then from practice to confidence.</p></div>
@@ -598,6 +780,17 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
       <div class="install-step"><b>Desktop</b>In a supported browser, use the install icon in the address bar or choose <strong>Install Knexa AI</strong> from the browser menu.</div>
     </div>
   </div>
+  <div class="card pad mt" id="helpCard">
+    <p class="eyebrow">Help and support</p>
+    <h2>Answers to common questions</h2>
+    <div class="faq">
+      <details><summary>How do I recover my account?</summary><p>Open the menu, choose <strong>Profile / Account</strong>, then select <strong>Recover account or reset access code</strong>. You will need your Knexa ID and your private recovery code.</p></details>
+      <details><summary>I lost my recovery code. What now?</summary><p>The recovery code is shown only once when the account is created, and Knexa cannot retrieve it for you. If you still know your access code, sign in and keep your credentials somewhere safe.</p></details>
+      <details><summary>How does Knexa Pro work?</summary><p>Pro is bought as a one-off period: one, three, six or twelve months. It does not renew automatically. Buying again before your period ends adds the new time after your current expiry date.</p></details>
+      <details><summary>My payment is not showing as Pro yet.</summary><p>Paystack confirms payments automatically after checkout, and Pro activates once Knexa verifies the payment. Check the payment history under Premium. A payment marked as pending can take a few minutes to update.</p></details>
+      <details><summary>How do I install Knexa on my phone?</summary><p>Open the menu and choose <strong>Install App</strong>, or follow the steps in the install card above. On iPhone, use Safari and choose Add to Home Screen.</p></details>
+    </div>
+  </div>
 </section>
 
 </main>
@@ -610,6 +803,37 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
   <button class="tab" data-go="cbt"><svg class="ic"><use href="#i-cbt"/></svg>Exam</button>
   <button class="tab" data-go="about"><svg class="ic"><use href="#i-about"/></svg>About</button>
 </nav>
+
+<div class="drawer-scrim" id="drawerScrim" data-act="drawer-close" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Main menu" aria-hidden="true">
+  <div class="drawer-top">
+    <div class="brand"><div class="mark" aria-hidden="true"><svg><use href="#i-knexa"/></svg></div><div>Knexa AI<small>LEARN WITH CLARITY</small></div></div>
+    <button class="icon-btn" id="drawerClose" type="button" data-act="drawer-close" aria-label="Close menu"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="drawer-user">
+    <span class="drawer-avatar" aria-hidden="true"><svg class="ic"><use href="#i-user"/></svg></span>
+    <div class="drawer-who"><strong id="drawerName">Guest</strong><span id="drawerPlan">Sign in to sync your plan</span></div>
+    <span class="badge plan" id="drawerBadge" data-plan="free" hidden>FREE</span>
+  </div>
+  <nav class="drawer-nav" aria-label="Menu">
+    <p class="drawer-sec">Account</p>
+    <button class="drawer-item" type="button" data-act="drawer-account"><span class="di-ic"><svg class="ic"><use href="#i-user"/></svg></span><span class="di-txt"><b>Profile / Account</b><small>Knexa ID, sign-in and recovery</small></span><svg class="ic di-go" aria-hidden="true"><use href="#i-chev"/></svg></button>
+    <button class="drawer-item" type="button" data-act="drawer-mode"><span class="di-ic"><svg class="ic"><use href="#i-switch"/></svg></span><span class="di-txt"><b>Account mode</b><small>Sign in with a different Knexa ID</small></span><svg class="ic di-go" aria-hidden="true"><use href="#i-chev"/></svg></button>
+    <button class="drawer-item" type="button" data-act="install"><span class="di-ic"><svg class="ic"><use href="#i-download"/></svg></span><span class="di-txt"><b>Install App</b><small id="drawerInstallSub">Add Knexa to your home screen</small></span><svg class="ic di-go" aria-hidden="true"><use href="#i-chev"/></svg></button>
+
+    <p class="drawer-sec">Appearance</p>
+    <button class="drawer-item" type="button" data-act="theme-set" data-set-theme="dark"><span class="di-ic"><svg class="ic"><use href="#i-moon"/></svg></span><span class="di-txt"><b>Dark mode</b><small>Easier on the eyes at night</small></span><i class="di-check" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></i></button>
+    <button class="drawer-item" type="button" data-act="theme-set" data-set-theme="light"><span class="di-ic"><svg class="ic"><use href="#i-sun"/></svg></span><span class="di-txt"><b>Light mode</b><small>Bright paper-style reading</small></span><i class="di-check" aria-hidden="true"><svg class="ic"><use href="#i-check"/></svg></i></button>
+
+    <p class="drawer-sec">Subscription</p>
+    <button class="drawer-item drawer-pro" type="button" data-act="drawer-premium" id="drawerPremium"><span class="di-ic"><svg class="ic"><use href="#i-star"/></svg></span><span class="di-txt"><b>Premium / Upgrade to Pro</b><small id="drawerPremiumSub">Compare plans and pay with Paystack</small></span><svg class="ic di-go" aria-hidden="true"><use href="#i-chev"/></svg></button>
+
+    <p class="drawer-sec">Other</p>
+    <button class="drawer-item" type="button" data-act="drawer-help"><span class="di-ic"><svg class="ic"><use href="#i-help"/></svg></span><span class="di-txt"><b>Help and Support</b><small>Answers to common questions</small></span><svg class="ic di-go" aria-hidden="true"><use href="#i-chev"/></svg></button>
+    <button class="drawer-item drawer-danger" type="button" data-act="logout" id="logoutItem" hidden><span class="di-ic"><svg class="ic"><use href="#i-logout"/></svg></span><span class="di-txt"><b>Logout</b><small>Sign out on this device</small></span></button>
+  </nav>
+  <p class="drawer-foot hint">Knexa AI · Learn with clarity</p>
+</aside>
 
 <dialog id="camDlg" class="cam" aria-label="Camera">
   <div class="dlg">
@@ -683,12 +907,8 @@ dialog::backdrop{background:rgba(6,12,22,.6);backdrop-filter:blur(5px);animation
 
       <div class="plan-card mt" id="proUpgradeCard">
         <div class="row between"><div><div class="lbl2">Membership</div><h3 style="margin:4px 0 0">Upgrade to Knexa Pro</h3></div><span class="badge plan" data-plan="pro">PRO</span></div>
-        <p class="hint mt2">Choose the billing period that suits your learning goals. Your selected plan and price are confirmed securely by Knexa before checkout.</p>
-        <div id="planOptions" class="plan-options" aria-live="polite"><p class="hint">Loading available plans…</p></div>
-        <label class="label mt" for="paystackEmail">Email for receipt</label>
-        <input class="field" id="paystackEmail" type="email" maxlength="320" placeholder="you@example.com" autocomplete="email">
-        <button class="btn primary block mt" id="paystackBtn" type="button" disabled>Continue with Paystack</button>
-        <p class="hint mt2">Payments are processed securely by Paystack. Each purchase is a one-off payment; subscriptions do not renew automatically. Existing expiry dates are preserved when access is extended.</p>
+        <p class="hint mt2">Compare the Pro periods and pay securely with Paystack on the Premium page.</p>
+        <button class="btn primary block mt" type="button" data-act="account-premium">View Premium plans</button>
       </div>
 
       <div class="card pad mt">
@@ -786,7 +1006,7 @@ const store={get(k){try{return localStorage.getItem(k)}catch{return null}},set(k
 const token=()=>{try{return sessionStorage.getItem('km_access_token')}catch{return null}};
 const setToken=v=>{try{v?sessionStorage.setItem('km_access_token',v):sessionStorage.removeItem('km_access_token')}catch{}};
 const S={image:null,imgUrl:null,busy:false,solution:null,question:'',exam:null,examId:null,idx:0,answers:{},review:new Set(),deadline:0,timer:null,submitting:false,examBusy:false,results:null,filter:'all',topicQ:null,dur:20,shot:null,shotUrl:null};
-let availablePlans=[],selectedPlan='monthly',installPrompt=null;
+let availablePlans=[],selectedPlan='monthly',installPrompt=null,planLimits=null,plansReady=false,plansError='';
 
 /* ---------- maths ----------
    KaTeX renders $…$, $$…$$, \(…\) and \[…\]. Bare LaTeX (e.g. \frac{4}{3}) is wrapped
@@ -851,10 +1071,12 @@ function setTheme(t){
   document.documentElement.dataset.theme=t;store.set('km_theme',t);
   document.querySelector('meta[name=theme-color]').content=t==='dark'?'#08101b':'#f5f3ee';
   $$('[data-act=theme]').forEach(b=>b.innerHTML=icon(t==='dark'?'sun':'moon')+`<span>${t==='dark'?'Light':'Dark'} mode</span>`);
+  syncDrawer();
 }
 
 /* ---------- router ---------- */
-const VIEWS=['solve','explore','cbt','about'];
+const VIEWS=['solve','explore','cbt','about','premium'];
+let currentView=null;
 function route(){
   const v=location.hash.slice(1),n=VIEWS.includes(v)?v:'solve';
   $$('.view').forEach(s=>{
@@ -863,7 +1085,10 @@ function route(){
     else s.hidden=!show;
   });
   $$('[data-go]').forEach(b=>b.dataset.go===n?b.setAttribute('aria-current','page'):b.removeAttribute('aria-current'));
-  window.scrollTo(0,0);
+  // Scroll to the top only when the view changes, so in-page jumps (help, install) are not undone.
+  if(n!==currentView){window.scrollTo(0,0);currentView=n}
+  if(n==='premium')loadPremium();
+  syncDrawer();
 }
 function go(n){location.hash==='#'+n?route():(location.hash=n)}
 addEventListener('hashchange',route);
@@ -1281,6 +1506,18 @@ document.addEventListener('click',e=>{
       showPanel('examSetup');break;
     }
     case 'to-solver':go('solve');break;
+    case 'theme-set':setTheme(b.dataset.setTheme);break;
+    case 'drawer-open':openDrawer();break;
+    case 'drawer-close':closeDrawer();break;
+    case 'drawer-account':closeDrawer(false);openAccount();break;
+    case 'drawer-mode':switchAccount();break;
+    case 'install':installFromMenu();break;
+    case 'drawer-premium':closeDrawer(false);go('premium');break;
+    case 'drawer-help':closeDrawer(false);go('about');route();$('#helpCard').scrollIntoView({behavior:'smooth',block:'start'});break;
+    case 'logout':setToken(null);closeDrawer(false);refreshAccount();toast('You have signed out.');break;
+    case 'prem-scroll':$('#premPlansSec').scrollIntoView({behavior:'smooth',block:'start'});break;
+    case 'prem-signin':openAccount();break;
+    case 'account-premium':$('#accountDlg').close();go('premium');break;
     case 'account-open':openAccount();break;
     case 'account-close':$('#accountDlg').close();break;
     case 'admin-open':openAdmin();break;
@@ -1295,6 +1532,7 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='ArrowRight'&&S.idx<S.exam.questions.length-1){S.idx++;renderQ()}
   else if(e.key==='ArrowLeft'&&S.idx>0){S.idx--;renderQ()}
 });
+addEventListener('keydown',e=>{if(e.key==='Escape'&&drawerIsOpen())closeDrawer()});
 addEventListener('beforeunload',e=>{if(!$('#examActive').hidden&&!S.results){e.preventDefault();e.returnValue=''}});
 
 /* ---------- account, Pro checkout and owner admin ---------- */
@@ -1328,24 +1566,109 @@ function copyCredentials(d){
   else toast('Please copy these details manually.');
 }
 const moneyNGN=n=>'₦'+Number(n||0).toLocaleString('en-NG');
+const isPro=()=>accountData?.plan==='pro';
+const fmtDate=v=>{if(!v)return '—';const d=new Date(v);return isNaN(d)?'—':d.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'})};
+const perMonth=p=>Math.round(Number(p.price_ngn)/Math.max(1,Number(p.duration_months)||1));
+const PAY_LABEL={paid:'Paid',pending:'Pending',failed:'Failed'};
+function recommendedId(){
+  const r=availablePlans.find(p=>/popular/i.test(p.promo_label||''));
+  return (r||availablePlans[Math.min(1,availablePlans.length-1)]||{}).plan_id;
+}
+function premMsg(m,err=false){$('#premMsg').innerHTML=m?`<div class="notice ${err?'error':'success'} mt2" role="status">${esc(m)}</div>`:''}
 function renderPlans(){
-  const root=$('#planOptions');if(!root)return;
-  if(!availablePlans.length){root.innerHTML='<p class="hint">No subscription plans are currently available. Please check again later.</p>';$('#paystackBtn').disabled=true;return}
-  if(!availablePlans.some(p=>p.plan_id===selectedPlan))selectedPlan=availablePlans[0].plan_id;
-  root.innerHTML=availablePlans.map(p=>`<button type="button" class="plan-option ${p.plan_id===selectedPlan?'selected':''}" data-plan-select="${esc(p.plan_id)}" aria-pressed="${p.plan_id===selectedPlan}">
-    ${p.promo_label?`<span class="plan-promo">${esc(p.promo_label)}</span>`:''}
-    <span class="plan-name">${esc(p.name)}</span><span class="plan-price">${moneyNGN(p.price_ngn)}</span>
-    <span class="plan-period">${esc(p.duration_label)}</span><span class="plan-description">${esc(p.description)}</span>
-  </button>`).join('');
-  $('#paystackBtn').disabled=false;
+  const root=$('#premPlans');if(!root)return;
+  if(!availablePlans.length){
+    const text=plansError||(plansReady?'No subscription plans are available right now. Please check again later.':'Loading plans…');
+    root.innerHTML=`<p class="notice ${plansError?'error':''}">${esc(text)}</p>`;
+    updateCheckout();return;
+  }
+  if(!availablePlans.some(p=>p.plan_id===selectedPlan))selectedPlan=recommendedId();
+  const rec=recommendedId();
+  root.innerHTML=availablePlans.map(p=>{
+    const sel=p.plan_id===selectedPlan,isRec=p.plan_id===rec,months=Number(p.duration_months)||1;
+    const tag=p.promo_label||(isRec?'Recommended':'');
+    return `<label class="prem-plan${sel?' sel':''}${isRec?' rec':''}">
+      <input type="radio" name="premPlan" value="${esc(p.plan_id)}"${sel?' checked':''}>
+      <span class="pp-top"><span class="pp-name">${esc(p.name)}</span>${tag?`<span class="pp-tag">${esc(tag)}</span>`:''}</span>
+      <span class="pp-price">${moneyNGN(p.price_ngn)}</span>
+      <span class="pp-period">${esc(p.duration_label)}</span>
+      <span class="pp-equiv">${months>1?`About ${moneyNGN(perMonth(p))} per month`:'Flexible, one month at a time'}</span>
+      <span class="pp-desc">${esc(p.description)}</span>
+      <span class="pp-feat"><span>Full Pro daily limits for ${esc(p.duration_label)}</span><span>Extends from your current Pro expiry date</span><span>One-off payment, no automatic renewal</span></span>
+      <span class="pp-cta">${sel?'Selected':'Select this plan'}</span>
+    </label>`;
+  }).join('');
+  updateCheckout();
 }
+function updateCheckout(){
+  const btn=$('#premPayBtn'),sel=availablePlans.find(p=>p.plan_id===selectedPlan);
+  $('#premSelected').textContent=sel?`${sel.name} · ${moneyNGN(sel.price_ngn)} for ${sel.duration_label}`:'No plan selected';
+  if(!sel){btn.disabled=true;btn.textContent='Plans unavailable';return}
+  if(!token()){btn.disabled=false;btn.textContent='Sign in to continue';return}
+  if(isPro()){btn.disabled=true;btn.textContent='Pro is already active';return}
+  btn.disabled=false;btn.textContent=`Continue with Paystack · ${moneyNGN(sel.price_ngn)}`;
+}
+function renderPremStatus(){
+  const root=$('#premStatus');if(!root)return;
+  if(!accountData){
+    root.innerHTML=`<div class="ps-row"><div><p class="eyebrow">Your plan</p><h2>Sign in to see your plan</h2><p class="hint">Your Pro status, expiry date and payment history appear here once you are signed in.</p></div><button class="btn primary" type="button" data-act="prem-signin">Sign in or create Knexa ID</button></div>`;
+    return;
+  }
+  if(isPro()){
+    const exp=accountData.subscription?.expires_at;
+    const days=exp?Math.max(0,Math.ceil((new Date(exp)-Date.now())/86400000)):null;
+    root.innerHTML=`<div class="ps-row"><div><p class="eyebrow">Your plan</p><h2>Knexa Pro <span class="badge correct">Active</span></h2><p class="hint">Your Pro access runs until ${fmtDate(exp)}${days!==null?` · ${days} day${days===1?'':'s'} left`:''}.</p></div></div>
+      ${accountData.expiry_notice?`<div class="notice mt2">${esc(accountData.expiry_notice)}</div>`:''}
+      <div class="ps-grid"><div><span class="hint">Status</span><strong>Active</strong></div><div><span class="hint">Expires</span><strong>${fmtDate(exp)}</strong></div><div><span class="hint">Renewal</span><strong>Not automatic</strong></div></div>
+      <p class="hint mt2">When this period ends, Pro stops unless you buy another period. A period bought before expiry is added from your current expiry date, so no paid time is lost.</p>`;
+  }else{
+    const prev=accountData.subscription?.expires_at,l=planLimits?.free_limits;
+    root.innerHTML=`<div class="ps-row"><div><p class="eyebrow">Your plan</p><h2>Free plan <span class="badge plan">FREE</span></h2><p class="hint">${prev?`Your last Pro period ended on ${fmtDate(prev)}. `:''}Free accounts have daily limits. Pro raises them.</p></div><button class="btn primary" type="button" data-act="prem-scroll">Choose a Pro plan</button></div>
+      ${l?`<p class="lbl2 mt2">Daily free allowance</p><div class="ps-limits"><div><span>Text solutions</span><strong>${l.ai_text} a day</strong></div><div><span>Photo solutions</span><strong>${l.ai_image} a day</strong></div><div><span>Practice topics</span><strong>${l.practice} a day</strong></div><div><span>CBT exams</span><strong>${l.cbt} a day</strong></div></div>`:''}`;
+  }
+}
+function renderCompare(){
+  const root=$('#premCompare');if(!root)return;
+  const f=planLimits?.free_limits,p=planLimits?.pro_limits;
+  const from=availablePlans.length?Math.min(...availablePlans.map(x=>Number(x.price_ngn))):null;
+  const lim=(o,k)=>o&&o[k]!=null?`${o[k]} a day`:'—';
+  const row=(k,a,b)=>`<div class="cmp-row"><span class="cmp-k">${esc(k)}</span><span class="cmp-cell"><small>Free</small>${esc(a)}</span><span class="cmp-cell cmp-pro"><small>Pro</small>${esc(b)}</span></div>`;
+  root.innerHTML=`<div class="cmp-row cmp-head"><span>Feature</span><span class="cmp-cell">Free</span><span class="cmp-cell cmp-pro">Pro</span></div>`+
+    row('Price','₦0',from!=null?`From ${moneyNGN(from)}`:'—')+
+    row('Text solutions',lim(f,'ai_text'),lim(p,'ai_text'))+
+    row('Photo solutions',lim(f,'ai_image'),lim(p,'ai_image'))+
+    row('Practice topics',lim(f,'practice'),lim(p,'practice'))+
+    row('CBT exams',lim(f,'cbt'),lim(p,'cbt'))+
+    row('Access period','Ongoing, daily limits','One, three, six or twelve months')+
+    row('Renewal','Not applicable','Not automatic');
+}
+function renderPremium(){renderPremStatus();renderCompare();renderPlans()}
 async function loadPlans(){
-  try{const d=await api('/api/plans',{quiet:true});availablePlans=Array.isArray(d.plans)?d.plans:[];renderPlans()}
-  catch(e){availablePlans=[];renderPlans();if($('#planOptions'))$('#planOptions').innerHTML=`<p class="hint">${esc(e.message||'Pricing is temporarily unavailable.')}</p>`}
+  try{
+    const d=await api('/api/plans',{quiet:true});
+    availablePlans=Array.isArray(d.plans)?d.plans:[];
+    planLimits={free_limits:d.free_limits||null,pro_limits:d.pro_limits||null};
+    plansError='';
+  }catch(e){availablePlans=[];planLimits=null;plansError=e.message||'Pricing is temporarily unavailable.'}
+  plansReady=true;
+  renderPremium();
 }
-$('#planOptions').addEventListener('click',e=>{
-  const b=e.target.closest('[data-plan-select]');if(!b)return;
-  selectedPlan=b.dataset.planSelect;renderPlans();
+async function loadPremium(){
+  renderPremium();
+  await Promise.all([loadPlans(),refreshAccount()]);
+  renderPremium();
+}
+$('#premPlans').addEventListener('change',e=>{
+  const r=e.target.closest('input[name=premPlan]');if(!r)return;
+  selectedPlan=r.value;renderPlans();
+});
+$('#premPayBtn').addEventListener('click',async()=>{
+  if(!token()){openAccount();return}
+  const btn=$('#premPayBtn');btn.disabled=true;btn.textContent='Opening secure checkout…';premMsg('');
+  try{
+    const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{email:$('#premEmail').value.trim(),plan_id:selectedPlan}});
+    location.href=d.authorization_url;
+  }catch(e){premMsg(e.message,true);updateCheckout()}
 });
 
 async function refreshAccount(){
@@ -1353,7 +1676,7 @@ async function refreshAccount(){
     accountData=null;
     $('#authForms').hidden=false;$('#signedPanel').hidden=true;
     $('#accountStatus').textContent='Create a Knexa ID automatically, or sign in with your existing one.';
-    $('#adminNav').hidden=true;return;
+    $('#adminNav').hidden=true;$('#premHistory').innerHTML='<p class="hint">Sign in to see your payments.</p>';$('#paymentHistory').innerHTML='Sign in to see your payment history.';syncDrawer();renderPremium();return;
   }
   try{
     accountData=await api('/api/me',{quiet:true});
@@ -1374,21 +1697,33 @@ async function refreshAccount(){
     $('#adminNav').hidden=!accountData.is_admin;
     $('#accountAdminBtn').hidden=!accountData.is_admin;
     loadPaymentHistory();
+    syncDrawer();renderPremium();
   }catch(e){
     setToken(null);accountData=null;
     $('#authForms').hidden=false;$('#signedPanel').hidden=true;
     $('#accountStatus').textContent=e.message;$('#adminNav').hidden=true;
+    syncDrawer();renderPremium();
   }
 }
+const histHTML=rows=>rows.length?`<ul class="hist">${rows.map(x=>{
+  const st=String(x.status||'');const tone=st==='paid'?'correct':st==='pending'?'unanswered':'incorrect';
+  const when=new Date((Number(x.created_at)||0)*1000).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'});
+  return `<li><div><strong>${esc(x.plan_name||'Knexa Pro')}</strong><small>${esc(x.reference)}</small></div><div><strong>₦${(Number(x.amount_kobo||0)/100).toLocaleString('en-NG')}</strong><span class="badge ${tone}">${esc(PAY_LABEL[st]||st)}</span><small class="hint">${esc(when)}</small></div></li>`;
+}).join('')}</ul>`:'<p class="hint">No payments yet.</p>';
 async function loadPaymentHistory(){
   try{
-    const rows=await api('/api/payments/history');
-    $('#paymentHistory').innerHTML=rows.length?`<table class="tbl"><thead><tr><th>Plan</th><th>Reference</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.plan_name||'Knexa Pro')}</td><td>${esc(x.reference)}</td><td>₦${(Number(x.amount_kobo)/100).toLocaleString('en-NG')}</td><td>${esc(x.status)}</td><td>${esc(new Date((x.created_at||0)*1000).toLocaleDateString())}</td></tr>`).join('')}</tbody></table>`:'No payments yet.';
-  }catch(e){$('#paymentHistory').textContent=e.message}
+    const html=histHTML(await api('/api/payments/history'));
+    $('#paymentHistory').innerHTML=html;$('#premHistory').innerHTML=html;
+  }catch(e){const m=esc(e.message);$('#paymentHistory').innerHTML=m;$('#premHistory').innerHTML=m}
 }
 async function openAccount(){
   if(!$('#accountDlg').open)$('#accountDlg').showModal();
-  accountMsg('');await Promise.all([refreshAccount(),loadPlans()]);
+  accountMsg('');await refreshAccount();
+}
+function switchAccount(){
+  closeDrawer(false);
+  if(token()){if(!confirm('Sign out of this Knexa ID so you can sign in with another one?'))return;setToken(null)}
+  openAccount();authModeSet('login');accountMsg('Sign in with the Knexa ID you want to use.');
 }
 $('#showLogin').addEventListener('click',()=>authModeSet('login'));
 $('#showSignup').addEventListener('click',()=>authModeSet('signup'));
@@ -1417,12 +1752,6 @@ $('#recoveryForm').addEventListener('submit',async e=>{
 });
 $('#accountAdminBtn').addEventListener('click',()=>{$('#accountDlg').close();openAdmin()});
 $('#signOutBtn').addEventListener('click',()=>{setToken(null);refreshAccount();accountMsg('You have signed out.')});
-$('#paystackBtn').addEventListener('click',async()=>{
-  try{
-    const d=await api('/api/payments/paystack/initialize',{method:'POST',body:{email:$('#paystackEmail').value.trim(),plan_id:selectedPlan}});
-    location.href=d.authorization_url;
-  }catch(e){accountMsg(e.message,true)}
-});
 
 async function openAdmin(){
   if(!accountData?.is_admin){toast('This dashboard is restricted to the Knexa owner.');return}
@@ -1490,12 +1819,13 @@ $('#grantForm').addEventListener('submit',async e=>{
 /* ---------- PWA installation ---------- */
 const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 function installHelp(){
-  const btn=$('#installBtn'),top=$('#installTopBtn'),status=$('#installStatus');if(!btn||!status)return;
+  const btn=$('#installBtn'),status=$('#installStatus'),sub=$('#drawerInstallSub');if(!btn||!status)return;
   if(standalone()){
     btn.textContent='Installed';btn.disabled=true;status.textContent='Knexa is installed on this device. Open it from your home screen or app launcher.';
-    if(top)top.textContent='Installed';return;
+    if(sub)sub.textContent='Installed on this device';return;
   }
   btn.disabled=false;
+  if(sub)sub.textContent=installPrompt?'Add Knexa to this device':'Step-by-step guide for your browser';
   if(installPrompt){btn.textContent='Install Knexa';status.textContent='Your browser supports direct installation. Select Install Knexa to add the app to your device.';}
   else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
     btn.textContent='View install steps';status.textContent='On iPhone or iPad, open this page in Safari, tap Share, then choose Add to Home Screen.';
@@ -1516,9 +1846,50 @@ async function requestInstall(){
   installHelp();
 }
 $('#installBtn').addEventListener('click',requestInstall);
-$('#installTopBtn').addEventListener('click',()=>{
-  go('about');route();$('#pwaInstallCard').scrollIntoView({behavior:'smooth',block:'center'});requestInstall();
-});
+function installFromMenu(){
+  closeDrawer(false);
+  if(standalone()){toast('Knexa AI is already installed on this device.');return}
+  go('about');route();
+  $('#pwaInstallCard').scrollIntoView({behavior:'smooth',block:'center'});
+  requestInstall();
+}
+
+/* ---------- mobile menu drawer ---------- */
+const drawerIsOpen=()=>$('#drawer').classList.contains('open');
+function openDrawer(){
+  if(drawerIsOpen())return;
+  syncDrawer();
+  $('#drawer').classList.add('open');$('#drawerScrim').classList.add('open');
+  $('#drawer').setAttribute('aria-hidden','false');$('#menuBtn').setAttribute('aria-expanded','true');
+  document.body.classList.add('drawer-open');
+  $('.main').inert=true;$('.tabbar').inert=true;
+  setTimeout(()=>$('#drawerClose').focus({preventScroll:true}),80);
+}
+function closeDrawer(restoreFocus=true){
+  if(!drawerIsOpen())return;
+  $('#drawer').classList.remove('open');$('#drawerScrim').classList.remove('open');
+  $('#drawer').setAttribute('aria-hidden','true');$('#menuBtn').setAttribute('aria-expanded','false');
+  document.body.classList.remove('drawer-open');
+  $('.main').inert=false;$('.tabbar').inert=false;
+  if(restoreFocus)$('#menuBtn').focus({preventScroll:true});
+}
+function syncDrawer(){
+  if(!$('#drawer'))return;
+  const dark=document.documentElement.dataset.theme==='dark';
+  $$('[data-set-theme]').forEach(b=>{
+    if(b.dataset.setTheme===(dark?'dark':'light'))b.setAttribute('aria-current','true');
+    else b.removeAttribute('aria-current');
+  });
+  const signed=!!accountData,pro=isPro();
+  $('#drawerName').textContent=signed?accountData.knexa_id:'Guest';
+  $('#drawerPlan').textContent=!signed?'Sign in to sync your plan':pro?'Knexa Pro · active':'Free plan';
+  const badge=$('#drawerBadge');
+  badge.textContent=pro?'PRO':'FREE';badge.dataset.plan=pro?'pro':'free';badge.hidden=!signed;
+  $('#logoutItem').hidden=!signed;
+  $('#drawerPremiumSub').textContent=pro?'Manage your Pro period':'Compare plans and pay with Paystack';
+  if(location.hash==='#premium')$('#drawerPremium').setAttribute('aria-current','page');
+  else $('#drawerPremium').removeAttribute('aria-current');
+}
 installHelp();
 addEventListener('offline',()=>toast('You are offline. Knexa pages remain available, but AI and account services need a connection.'));
 addEventListener('online',()=>toast('Connection restored. You can continue learning.'));
